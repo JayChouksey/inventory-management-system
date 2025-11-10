@@ -3,6 +3,7 @@ package com.example.coditas.order.repository;
 import com.example.coditas.order.entity.DealerOrder;
 import com.example.coditas.order.enums.DealerOrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,11 @@ public interface DealerOrderRepository extends JpaRepository<DealerOrder, Long> 
             @Param("end") ZonedDateTime end,
             @Param("status") DealerOrderStatus status
     );
+
+    @Query("SELECT COUNT(o) FROM DealerOrder o WHERE o.centralOffice.id = :officeId")
+    Long countOrdersByCentralOfficeId(@Param("officeId") Long officeId);
+
+    @Modifying
+    @Query("UPDATE DealerOrder o SET o.centralOffice.id = :newOfficeId WHERE o.centralOffice.id = :oldOfficeId")
+    void reassignOrders(@Param("oldOfficeId") Long oldOfficeId, @Param("newOfficeId") Long newOfficeId);
 }

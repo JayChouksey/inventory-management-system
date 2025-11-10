@@ -42,4 +42,15 @@ public class CentralOffice {
     @LastModifiedDate
     @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate(){
+        createdAt = ZonedDateTime.now();
+        updatedAt = ZonedDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        updatedAt = ZonedDateTime.now();
+    }
 }
