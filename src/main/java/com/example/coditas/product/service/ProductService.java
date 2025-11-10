@@ -1,7 +1,7 @@
 package com.example.coditas.product.service;
 
-import com.example.coditas.appuser.entity.User;
-import com.example.coditas.appuser.repository.UserRepository;
+import com.example.coditas.user.entity.User;
+import com.example.coditas.user.repository.UserRepository;
 import com.example.coditas.common.dto.PageableDto;
 import com.example.coditas.common.enums.ActiveStatus;
 import com.example.coditas.common.exception.CustomException;

@@ -1,10 +1,8 @@
-package com.example.coditas.appuser.dto;
+package com.example.coditas.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 // FactoryProductionSummaryDto.java
 @Builder

@@ -1,6 +1,6 @@
 package com.example.coditas.centraloffice.entity;
 
-import com.example.coditas.appuser.entity.User;
+import com.example.coditas.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

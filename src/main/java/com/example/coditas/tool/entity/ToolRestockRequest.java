@@ -1,6 +1,6 @@
 package com.example.coditas.tool.entity;
 
-import com.example.coditas.appuser.entity.User;
+import com.example.coditas.user.entity.User;
 import com.example.coditas.factory.entity.Factory;
 import com.example.coditas.tool.enums.RestockStatus;
 import jakarta.persistence.*;

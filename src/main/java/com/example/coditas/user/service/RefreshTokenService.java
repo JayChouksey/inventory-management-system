@@ -1,9 +1,9 @@
-package com.example.coditas.appuser.service;
+package com.example.coditas.user.service;
 
-import com.example.coditas.appuser.entity.RefreshToken;
-import com.example.coditas.appuser.entity.User;
-import com.example.coditas.appuser.repository.RefreshTokenRepository;
-import com.example.coditas.appuser.repository.UserRepository;
+import com.example.coditas.user.entity.RefreshToken;
+import com.example.coditas.user.entity.User;
+import com.example.coditas.user.repository.RefreshTokenRepository;
+import com.example.coditas.user.repository.UserRepository;
 import com.example.coditas.common.exception.CustomException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-package com.example.coditas.appuser.repository;
+package com.example.coditas.user.repository;
 
-import com.example.coditas.appuser.entity.User;
+import com.example.coditas.user.entity.User;
 import com.example.coditas.common.enums.ActiveStatus;
 import com.example.coditas.common.enums.UserRole;
 import org.springframework.data.domain.Page;

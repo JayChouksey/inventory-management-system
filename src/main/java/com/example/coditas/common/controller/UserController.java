@@ -1,7 +1,7 @@
 package com.example.coditas.common.controller;
 
-import com.example.coditas.appuser.dto.*;
-import com.example.coditas.appuser.service.UserService;
+import com.example.coditas.user.dto.*;
+import com.example.coditas.user.service.UserService;
 import com.example.coditas.common.dto.ApiResponseDto;
 import com.example.coditas.common.dto.PageableDto;
 import jakarta.validation.Valid;

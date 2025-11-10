@@ -1,4 +1,4 @@
-package com.example.coditas.appuser.dto;
+package com.example.coditas.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

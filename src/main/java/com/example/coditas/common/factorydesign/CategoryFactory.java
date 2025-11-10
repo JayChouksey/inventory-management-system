@@ -1,4 +1,4 @@
-package com.example.coditas.common.factory;
+package com.example.coditas.common.factorydesign;
 
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.common.service.CategoryService;

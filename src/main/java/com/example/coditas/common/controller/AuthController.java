@@ -1,8 +1,8 @@
 package com.example.coditas.common.controller;
 
-import com.example.coditas.appuser.dto.*;
-import com.example.coditas.appuser.service.AuthService;
-import com.example.coditas.appuser.service.UserService;
+import com.example.coditas.user.dto.*;
+import com.example.coditas.user.service.AuthService;
+import com.example.coditas.user.service.UserService;
 import com.example.coditas.common.dto.ApiResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

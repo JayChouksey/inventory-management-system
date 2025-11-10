@@ -1,9 +1,9 @@
 package com.example.coditas.centraloffice.service;
 
-import com.example.coditas.appuser.entity.Role;
-import com.example.coditas.appuser.entity.User;
-import com.example.coditas.appuser.repository.RoleRepository;
-import com.example.coditas.appuser.repository.UserRepository;
+import com.example.coditas.user.entity.Role;
+import com.example.coditas.user.entity.User;
+import com.example.coditas.user.repository.RoleRepository;
+import com.example.coditas.user.repository.UserRepository;
 import com.example.coditas.centraloffice.dto.CentralOfficeCreateRequestDto;
 import com.example.coditas.centraloffice.dto.CentralOfficeFilterDto;
 import com.example.coditas.centraloffice.dto.CentralOfficeResponseDto;

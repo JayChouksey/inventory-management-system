@@ -1,9 +1,9 @@
 package com.example.coditas.factory.service;
 
-import com.example.coditas.appuser.entity.Role;
-import com.example.coditas.appuser.entity.User;
-import com.example.coditas.appuser.repository.RoleRepository;
-import com.example.coditas.appuser.repository.UserRepository;
+import com.example.coditas.user.entity.Role;
+import com.example.coditas.user.entity.User;
+import com.example.coditas.user.repository.RoleRepository;
+import com.example.coditas.user.repository.UserRepository;
 import com.example.coditas.centraloffice.entity.CentralOffice;
 import com.example.coditas.centraloffice.repository.CentralOfficeRepository;
 import com.example.coditas.common.dto.PageableDto;
@@ -30,7 +30,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 // FactoryService.java

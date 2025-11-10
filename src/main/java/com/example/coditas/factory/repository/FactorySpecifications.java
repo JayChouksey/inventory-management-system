@@ -1,6 +1,6 @@
 package com.example.coditas.factory.repository;
 
-import com.example.coditas.appuser.entity.User;
+import com.example.coditas.user.entity.User;
 import com.example.coditas.factory.dto.FactoryFilterDto;
 import com.example.coditas.factory.entity.Factory;
 import jakarta.persistence.criteria.Join;

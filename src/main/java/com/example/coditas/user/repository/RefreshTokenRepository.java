@@ -1,6 +1,6 @@
-package com.example.coditas.appuser.repository;
+package com.example.coditas.user.repository;
 
-import com.example.coditas.appuser.entity.RefreshToken;
+import com.example.coditas.user.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

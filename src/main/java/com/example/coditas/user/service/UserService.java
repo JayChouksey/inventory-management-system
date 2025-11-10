@@ -1,11 +1,11 @@
-package com.example.coditas.appuser.service;
+package com.example.coditas.user.service;
 
-import com.example.coditas.appuser.dto.*;
-import com.example.coditas.appuser.entity.Role;
-import com.example.coditas.appuser.entity.User;
-import com.example.coditas.appuser.repository.RoleRepository;
-import com.example.coditas.appuser.repository.UserRepository;
-import com.example.coditas.appuser.repository.UserSpecifications;
+import com.example.coditas.user.dto.*;
+import com.example.coditas.user.entity.Role;
+import com.example.coditas.user.entity.User;
+import com.example.coditas.user.repository.RoleRepository;
+import com.example.coditas.user.repository.UserRepository;
+import com.example.coditas.user.repository.UserSpecifications;
 import com.example.coditas.common.dto.PageableDto;
 import com.example.coditas.common.enums.ActiveStatus;
 import com.example.coditas.common.enums.UserRole;

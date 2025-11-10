@@ -1,4 +1,4 @@
-package com.example.coditas.appuser.dto;
+package com.example.coditas.user.dto;
 
 import com.example.coditas.common.enums.ActiveStatus;
 import lombok.Getter;

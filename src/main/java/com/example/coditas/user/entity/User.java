@@ -1,4 +1,4 @@
-package com.example.coditas.appuser.entity;
+package com.example.coditas.user.entity;
 
 import com.example.coditas.common.enums.ActiveStatus;
 import com.example.coditas.factory.entity.UserFactoryMapping;

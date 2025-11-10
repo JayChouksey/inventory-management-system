@@ -1,6 +1,6 @@
 package com.example.coditas.notification.entity;
 
-import com.example.coditas.appuser.entity.User;
+import com.example.coditas.user.entity.User;
 import com.example.coditas.notification.constant.EmailStatus;
 import jakarta.persistence.*;
 import lombok.*;

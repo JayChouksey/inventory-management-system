@@ -1,4 +1,4 @@
-package com.example.coditas.appuser.entity;
+package com.example.coditas.user.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

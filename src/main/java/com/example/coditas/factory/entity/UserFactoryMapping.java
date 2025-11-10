@@ -1,7 +1,7 @@
 package com.example.coditas.factory.entity;
 
-import com.example.coditas.appuser.entity.Role;
-import com.example.coditas.appuser.entity.User;
+import com.example.coditas.user.entity.Role;
+import com.example.coditas.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

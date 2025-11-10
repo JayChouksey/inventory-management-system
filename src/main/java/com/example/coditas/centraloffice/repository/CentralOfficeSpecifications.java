@@ -1,6 +1,6 @@
 package com.example.coditas.centraloffice.repository;
 
-import com.example.coditas.appuser.entity.User;
+import com.example.coditas.user.entity.User;
 import com.example.coditas.centraloffice.dto.CentralOfficeFilterDto;
 import com.example.coditas.centraloffice.entity.CentralOffice;
 import jakarta.persistence.criteria.Join;

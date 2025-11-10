@@ -1,6 +1,6 @@
-package com.example.coditas.appuser.repository;
+package com.example.coditas.user.repository;
 
-import com.example.coditas.appuser.entity.Role;
+import com.example.coditas.user.entity.Role;
 import com.example.coditas.common.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

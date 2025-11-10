@@ -1,7 +1,7 @@
 package com.example.coditas.common.util;
 
-import com.example.coditas.appuser.entity.User;
-import com.example.coditas.appuser.repository.UserRepository;
+import com.example.coditas.user.entity.User;
+import com.example.coditas.user.repository.UserRepository;
 import com.example.coditas.common.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

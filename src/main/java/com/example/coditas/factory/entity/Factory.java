@@ -1,6 +1,6 @@
 package com.example.coditas.factory.entity;
 
-import com.example.coditas.appuser.entity.User;
+import com.example.coditas.user.entity.User;
 import com.example.coditas.centraloffice.entity.CentralOffice;
 import com.example.coditas.common.enums.ActiveStatus;
 import jakarta.persistence.*;
