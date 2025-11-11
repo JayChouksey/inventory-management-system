@@ -27,24 +27,15 @@ pipeline {
         }
         }
 
-        stage('Sonarqube static code analysis') {
-    steps {
-        script {
-            
-            def scannerHome = tool 'SonarQube'
-            
-            withSonarQubeEnv('Sonar') {
-                sh """
-                    ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=your-project-key \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=${SONAR_HOST_URL} \
-                    -Dsonar.login=${SONAR_TOKEN}
-                """
+        
+        stage('SonarQube static code analysis') {
+        steps {
+            withSonarQubeEnv('MySonar') { 
+                sh 'mvn sonar:sonar -Dsonar.projectKey=your-project-key'
             }
         }
     }
-}
+
 
 
         stage('Build docker image and push to ECR') {
