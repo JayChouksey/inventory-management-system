@@ -17,7 +17,6 @@ import com.example.coditas.factory.dto.FactoryUpdateRequestDto;
 import com.example.coditas.factory.entity.Factory;
 import com.example.coditas.factory.repository.FactoryRepository;
 import com.example.coditas.factory.repository.FactorySpecifications;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 
-// FactoryService.java
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -44,7 +42,6 @@ public class FactoryService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EntityManager entityManager;
 
     @Transactional
     public FactoryResponseDto createFactory(FactoryCreateRequestDto dto) {
@@ -69,8 +66,7 @@ public class FactoryService {
                 .isActive(ActiveStatus.ACTIVE)
                 .build();
 
-        factory = factoryRepository.saveAndFlush(factory);
-        entityManager.refresh(factory);
+        factory = factoryRepository.save(factory);
 
         log.info("Factory created: {} ({}) by admin", factory.getName(), factory.getFactoryId());
 
@@ -181,8 +177,8 @@ public class FactoryService {
                 .isActive(ActiveStatus.ACTIVE)
                 .build();
 
-        newUser = userRepository.saveAndFlush(newUser);
-        entityManager.refresh(newUser);
+        // TODO: Change it
+        newUser = userRepository.save(newUser);
 
         // TODO: Send email with credentials
         log.info("New Plant Head created: {} ({})", newUser.getName(), newUser.getEmail());

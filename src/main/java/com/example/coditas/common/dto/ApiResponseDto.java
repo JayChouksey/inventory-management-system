@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 @Getter
@@ -18,8 +17,6 @@ public class ApiResponseDto<T> {
     private boolean success;
     private String message;
     private T data;
-    private HttpStatus status;
-    private ZonedDateTime timestamp;
     private Map<String, Object> meta;
 
 
@@ -28,8 +25,6 @@ public class ApiResponseDto<T> {
                 .success(true)
                 .message("Success")
                 .data(data)
-                .status(HttpStatus.OK)
-                .timestamp(ZonedDateTime.now())
                 .build();
     }
 
@@ -38,8 +33,6 @@ public class ApiResponseDto<T> {
                 .success(true)
                 .message(message)
                 .data(data)
-                .status(HttpStatus.OK)
-                .timestamp(ZonedDateTime.now())
                 .build();
     }
 
@@ -48,8 +41,6 @@ public class ApiResponseDto<T> {
                 .success(true)
                 .message("Success")
                 .data(data)
-                .status(HttpStatus.OK)
-                .timestamp(ZonedDateTime.now())
                 .meta(Map.of(
                         "page", page,
                         "size", size,
@@ -63,8 +54,6 @@ public class ApiResponseDto<T> {
         return ApiResponseDto.<T>builder()
                 .success(false)
                 .message(message)
-                .status(status)
-                .timestamp(ZonedDateTime.now())
                 .build();
     }
 

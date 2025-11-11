@@ -14,7 +14,6 @@ import com.example.coditas.tool.repository.ToolCategoryRepository;
 import com.example.coditas.tool.repository.ToolRepository;
 import com.example.coditas.tool.repository.ToolSpecifications;
 import com.example.coditas.tool.repository.ToolStockRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,7 +37,6 @@ public class ToolService {
     private final ToolCategoryRepository categoryRepository;
     private final ToolStockRepository toolStockRepository;
     private final CloudinaryService cloudinaryService;
-    private final EntityManager entityManager;
 
     public Page<ToolResponseDto> searchTools(ToolFilterDto filter, PageableDto pageReq) {
         Specification<Tool> spec = ToolSpecifications.withFilters(filter);
@@ -82,8 +80,7 @@ public class ToolService {
                 .threshold(dto.getThreshold() != null ? dto.getThreshold() : 0)
                 .build();
 
-        tool = toolRepository.saveAndFlush(tool);
-        entityManager.refresh(tool);
+        tool = toolRepository.save(tool);
 
         log.info("Tool created: {} ({})", tool.getName(), tool.getToolId());
         return toDto(tool);

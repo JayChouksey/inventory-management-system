@@ -2,7 +2,6 @@ package com.example.coditas.product.repository;
 
 import com.example.coditas.common.dto.CategoryFilterDto;
 import com.example.coditas.product.entity.ProductCategory;
-import com.example.coditas.tool.entity.ToolCategory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 

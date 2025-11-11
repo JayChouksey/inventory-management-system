@@ -15,7 +15,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-// ProductSpecifications.java
 public class ProductSpecifications {
 
     public static Specification<Product> withFilters(ProductFilterDto filter) {

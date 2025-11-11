@@ -17,7 +17,6 @@ import com.example.coditas.common.enums.UserRole;
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.common.util.CloudinaryService;
 import com.example.coditas.order.repository.DealerOrderRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,7 +29,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -46,7 +44,6 @@ public class CentralOfficeService {
     private final DealerOrderRepository dealerOrderRepository;
     private final CloudinaryService cloudinaryService;
     private final PasswordEncoder passwordEncoder;
-    private final EntityManager entityManager;
 
     public Page<CentralOfficeResponseDto> searchOffices(CentralOfficeFilterDto filter, PageableDto pageReq) {
         Specification<CentralOffice> spec = CentralOfficeSpecifications.withFilters(filter);
@@ -81,8 +78,7 @@ public class CentralOfficeService {
                 .isActive(ActiveStatus.ACTIVE)
                 .build();
 
-        office = centralOfficeRepository.saveAndFlush(office);
-        entityManager.refresh(office);
+        office = centralOfficeRepository.save(office);
 
         log.info("Central Office created: {} ({})", office.getCity(), office.getCentralOfficeId());
         return toDto(office);
@@ -108,7 +104,6 @@ public class CentralOfficeService {
             office.setHead(newHead);
         }
 
-        office.setUpdatedAt(ZonedDateTime.now());
         office = centralOfficeRepository.save(office);
 
         return toDto(office);
@@ -173,8 +168,7 @@ public class CentralOfficeService {
                 .isActive(ActiveStatus.ACTIVE)
                 .build();
 
-        user = userRepository.saveAndFlush(user);
-        entityManager.refresh(user);
+        user = userRepository.save(user);
 
         log.info("New Central Office Head created: {}", user.getName());
         return user;

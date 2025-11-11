@@ -11,6 +11,6 @@ public class CategoryResponseDto {
     private Long id;
     private String name;
     private String description;
-    private Long toolCount;
+    private Long toolCount; // TODO: Need fix for ProductCategory
     private String createdOn;
 }

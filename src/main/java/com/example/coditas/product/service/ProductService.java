@@ -16,7 +16,6 @@ import com.example.coditas.product.repository.ProductCategoryRepository;
 import com.example.coditas.product.repository.ProductRepository;
 import com.example.coditas.product.repository.ProductSpecifications;
 import com.example.coditas.product.repository.ProductStockRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -43,7 +42,6 @@ public class ProductService {
     private final UserRepository userRepository;
     private final ProductCategoryRepository categoryRepository;
     private final CloudinaryService cloudinaryService;
-    private final EntityManager entityManager;
 
     public Page<ProductResponseDto> searchProducts(ProductFilterDto filter, PageableDto pageReq) {
         Specification<Product> spec = ProductSpecifications.withFilters(filter);
@@ -84,8 +82,7 @@ public class ProductService {
                 .createdBy(getCurrentUser())
                 .build();
 
-        product = productRepository.saveAndFlush(product);
-        entityManager.refresh(product);
+        product = productRepository.save(product);
 
         log.info("Product created: {} ({})", product.getName(), product.getProductId());
         return toDto(product);
