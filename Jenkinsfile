@@ -30,7 +30,7 @@ pipeline {
         
         stage('SonarQube static code analysis') {
         steps {
-            withSonarQubeEnv('MySonar') { 
+            withSonarQubeEnv('Sonar') { 
                 sh 'mvn sonar:sonar -Dsonar.projectKey=your-project-key'
             }
         }
