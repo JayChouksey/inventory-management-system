@@ -3,10 +3,10 @@ pipeline {
 
     environment{
         SONAR_HOST_URL=credentials('sonar_host')
-        SONAR_TOKEN=credentials('tokensonar')
+        SONAR_TOKEN=credentials('SONAR_TOKEN')
         ECR_URI="352731040690.dkr.ecr.ap-south-1.amazonaws.com"
         AWS_CREDS = credentials('aws-creds')
-        ENV_FILE=credentials('ENV_FILE_JAY')
+        // ENV_FILE=credentials('ENV_FILE_JAY')
     }
 
     stages {
