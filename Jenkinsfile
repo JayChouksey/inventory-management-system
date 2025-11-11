@@ -1,5 +1,5 @@
 pipeline {
-    agent {label "agent1"}
+    agent {label "jenkins-agent"}
 
     environment{
         SONAR_HOST_URL=credentials('sonar_host')
