@@ -32,7 +32,7 @@ pipeline {
         stage('Sonarqube static code analysis') {
             steps {
                  script {
-                    def scannerHome = tool 'SonarQube Scanner 2.8' 
+                    def scannerHome = tool 'SonarQube' 
                 }
                 withSonarQubeEnv(credentialsId: 'SONAR_TOKEN', installationName: 'SonarQube')
                  { 
