@@ -31,7 +31,12 @@ pipeline {
         stage('SonarQube static code analysis') {
         steps {
             withSonarQubeEnv('Sonar') { 
-                sh 'mvn sonar:sonar -Dsonar.projectKey=your-project-key'
+               sh '''
+                mvn sonar:sonar \
+                    -Dsonar.projectKey=inventory-management-system \
+                    -Dsonar.host.url=$SONAR_HOST_URL \
+                    -Dsonar.login=$SONAR_AUTH_TOKEN
+            '''
             }
         }
     }
