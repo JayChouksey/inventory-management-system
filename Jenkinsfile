@@ -72,7 +72,7 @@ pipeline {
         stage('Docker container run'){
             steps {
                 sh """
-                ssh -o StrictHostKeyChecking=no -i ~/.ssh/new-key ubuntu@${SERVER_IP} \"
+                ssh -o StrictHostKeyChecking=no -i ~/new-key ubuntu@${SERVER_IP} \"
                     sudo docker pull 352731040690.dkr.ecr.ap-south-1.amazonaws.com/javabackend:${env.BUILD_NUMBER}
                     sudo docker stop javacont || true
                     sudo docker rm javacont || true
