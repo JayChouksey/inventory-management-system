@@ -13,11 +13,7 @@ pipeline {
     
     stages {
 
-        stage('Build') {
-            steps {
-                sh 'mvn clean install -DskipTests'
-            }
-        }
+        
         stage('AWS Login') {
             
             steps {
@@ -33,6 +29,15 @@ pipeline {
         }
         }
 
+        stage('Build') {
+            steps {
+                sh '''
+                export JAVA_HOME=/usr/lib/jvm/jdk-21
+                export PATH=$JAVA_HOME/bin:$PATH
+                mvn clean install -DskipTests
+                '''
+            }
+        }
         
         stage('SonarQube static code analysis') {
         steps {
