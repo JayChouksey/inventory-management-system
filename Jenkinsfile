@@ -60,8 +60,8 @@ pipeline {
                 sh """
                     export PATH=$PATH:/usr/local/bin
                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ECR_URI}
-                    sudo docker build -f Dockerfile_java -t javabackend:${env.BUILD_NUMBER}
-                    sudo docker tag javabakend:${env.BUILD_NUMBER} ${ECR_URI}/javabcakend:${env.BUILD_NUMBER}
+                    sudo docker build -t javabackend:${env.BUILD_NUMBER} .
+                    sudo docker tag javabakend:${env.BUILD_NUMBER} ${ECR_URI}/javabackend:${env.BUILD_NUMBER}
                     sudo docker push ${ECR_URI}/javabackend:${env.BUILD_NUMBER}
 
                 """
