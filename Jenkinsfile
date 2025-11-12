@@ -4,10 +4,17 @@ pipeline {
     environment{
         SONAR_HOST_URL=credentials('sonar_host')
         SONAR_TOKEN=credentials('SONAR_TOKEN')
-        ECR_URI="352731040690.dkr.ecr.ap-south-1.amazonaws.com"
+        ECR_URI=credentials('ECR_URI')
         AWS_CREDS = credentials('aws-creds')
         AWS_DEFAULT_REGION='ap-south-1'
-        ENV_FILE=credentials('ENV_FILE_JAY')
+        SPRING_DATASOURCE_URL=credntials('SPRING_DATASOURCE_URL')
+        SPRING_DATASOURCE_USERNAME=credentials('DB_USER')
+        SPRING_DATASOURCE_PASSWORD=credentials('DB_PASSWORD')
+        SECURITY_JWT_SECRET_KEY=credentials('SECURITY_JWT_SECRET_KEY')
+        JWT_REFRESH_EXPIRATION_MS=credentials('JWT_REFRESH_EXPIRATION_MS')
+        CLOUDINARY_CLOUD_NAME=credentials('CLOUDINARY_CLOUD_NAME')
+        CLOUDINARY_API_KEY=credentials('CLOUDINARY_API_KEY')
+        CLOUDINARY_API_SECRET=credentials('CLOUDINARY_API_SECRET')
         SERVER_IP=credentials('SERVER_IP')
     }
 
@@ -76,7 +83,7 @@ pipeline {
                     sudo docker pull 352731040690.dkr.ecr.ap-south-1.amazonaws.com/javabackend:${env.BUILD_NUMBER}
                     sudo docker stop javacont || true
                     sudo docker rm javacont || true
-                    sudo docker run -d --name javacont -p 8001:8080 --env-file ${ENV_FILE} ${ECR_URI}/javabackend:${env.BUILD_NUMBER}
+                    sudo docker run -d --name javacont -p 8001:8080 -e SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL} -e SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME} -e SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD} -e SECURITY_JWT_SECRET_KEY=${SECURITY_JWT_SECRET_KEY} -e JWT_REFRESH_EXPIRATION_MS=${JWT_REFRESH_EXPIRATION_MS} -e CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME} -e CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY} -e CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET} ${ECR_URI}/javabackend:${env.BUILD_NUMBER}
 
                     \"
                 """
