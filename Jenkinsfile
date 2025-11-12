@@ -7,7 +7,7 @@ pipeline {
         ECR_URI=credentials('ECR_URI')
         AWS_CREDS = credentials('aws-creds')
         AWS_DEFAULT_REGION='ap-south-1'
-        SPRING_DATASOURCE_URL=credntials('SPRING_DATASOURCE_URL')
+        SPRING_DATASOURCE_URL=credentials('SPRING_DATASOURCE_URL')
         SPRING_DATASOURCE_USERNAME=credentials('DB_USER')
         SPRING_DATASOURCE_PASSWORD=credentials('DB_PASSWORD')
         SECURITY_JWT_SECRET_KEY=credentials('SECURITY_JWT_SECRET_KEY')
