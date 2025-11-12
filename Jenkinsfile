@@ -81,7 +81,7 @@ pipeline {
                 sh """
                 ssh -o StrictHostKeyChecking=no -i /home/ubuntu/new-key ubuntu@${SERVER_IP} \"
                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ECR_URI}
-                    docker pull ${ECR_URI}/node_app:${BUILD_NUMBER}
+                    docker pull ${ECR_URI}/javabackend:${BUILD_NUMBER}
                     sudo docker stop javacont || true
                     sudo docker rm javacont || true
                     sudo docker run -d --name javacont -p 8001:8080 -e SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL} -e SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME} -e SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD} -e SECURITY_JWT_SECRET_KEY=${SECURITY_JWT_SECRET_KEY} -e JWT_REFRESH_EXPIRATION_MS=${JWT_REFRESH_EXPIRATION_MS} -e CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME} -e CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY} -e CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET} ${ECR_URI}/javabackend:${env.BUILD_NUMBER}
