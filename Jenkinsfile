@@ -80,6 +80,7 @@ pipeline {
             steps {
                 sh """
                 ssh -o StrictHostKeyChecking=no -i /home/ubuntu/new-key ubuntu@${SERVER_IP} \"
+                    aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ECR_URI}
                     sudo docker pull 352731040690.dkr.ecr.ap-south-1.amazonaws.com/javabackend:${env.BUILD_NUMBER}
                     sudo docker stop javacont || true
                     sudo docker rm javacont || true
