@@ -8,6 +8,7 @@ pipeline {
         AWS_CREDS = credentials('aws-creds')
         AWS_DEFAULT_REGION='ap-south-1'
         ENV_FILE=credentials('ENV_FILE_JAY')
+        SERVER_IP=credentials('SERVER_IP')
     }
 
     
