@@ -1,5 +1,5 @@
 package com.example.coditas.tool.enums;
 
-public enum ToolNature {
+public enum RequestNature {
     FRESH, EXTENDED
 }

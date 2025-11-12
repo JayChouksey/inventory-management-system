@@ -1,5 +1,6 @@
 package com.example.coditas.product.dto;
 
+import com.example.coditas.common.validation.ValidImage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,5 +16,6 @@ public class ProductUpdateRequestDto {
     private String description;
     private BigDecimal unitPrice;
     private Long categoryId;
+    @ValidImage
     private MultipartFile image; // optional
 }

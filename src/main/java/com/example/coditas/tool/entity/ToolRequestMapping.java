@@ -10,7 +10,7 @@ public class ToolRequestMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "request_id", nullable = false)
@@ -21,5 +21,5 @@ public class ToolRequestMapping {
     private Tool tool;
 
     @Column(name = "quantity_requested", nullable = false)
-    private Integer quantityRequested = 0;
+    private Long quantityRequested = 0L;
 }

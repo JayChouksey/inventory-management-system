@@ -2,10 +2,8 @@ package com.example.coditas.common.controller;
 
 import com.example.coditas.common.dto.ApiResponseDto;
 import com.example.coditas.common.dto.PageableDto;
-import com.example.coditas.tool.dto.ToolCreateRequestDto;
-import com.example.coditas.tool.dto.ToolFilterDto;
-import com.example.coditas.tool.dto.ToolResponseDto;
-import com.example.coditas.tool.dto.ToolUpdateRequestDto;
+import com.example.coditas.common.exception.CustomException;
+import com.example.coditas.tool.dto.*;
 import com.example.coditas.tool.service.ToolService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/v1/admin/tools")
+@RequestMapping("/api/v1/tools")
 @RequiredArgsConstructor
 @Slf4j
 public class ToolController {
@@ -67,4 +67,44 @@ public class ToolController {
         String msg = toolService.deleteTool(id);
         return ResponseEntity.ok(ApiResponseDto.ok(msg, "Success"));
     }
+
+    // --- FACTORY STOCK MANAGEMENT (PLANT_HEAD) ---
+    @PostMapping("/stock/factory/{factoryId}")
+    public ResponseEntity<ApiResponseDto<ToolStockResponseDto>> addStockToFactory(
+            @PathVariable String factoryId,
+            @Valid @RequestBody AddToolStockDto dto) {
+        ToolStockResponseDto updatedStock = toolService.addStockToFactory(factoryId, dto);
+        return ResponseEntity.ok(ApiResponseDto.ok(updatedStock, "Stock added to factory successfully."));
+    }
+
+    // --- TOOL RETURN & CONFISCATION (CHIEF_SUPERVISOR) ---
+    @PostMapping("/issuance/{issuanceId}/return")
+    public ResponseEntity<ApiResponseDto<Void>> returnTool(
+            @PathVariable Long issuanceId,
+            @RequestBody Map<String, Long> body) {
+        Long fitQuantity = body.get("fitQuantity");
+        Long unfitQuantity = body.get("unfitQuantity");
+        if (fitQuantity == null || unfitQuantity == null) {
+            throw new CustomException("Both 'fitQuantity' and 'unfitQuantity' are required.", HttpStatus.BAD_REQUEST);
+        }
+        toolService.returnTool(issuanceId, fitQuantity, unfitQuantity);
+        return ResponseEntity.ok(ApiResponseDto.ok(null, "Tool returned successfully."));
+    }
+
+    @PostMapping("/issuance/{issuanceId}/confiscate")
+    public ResponseEntity<ApiResponseDto<Void>> confiscateTool(@PathVariable Long issuanceId) {
+        toolService.confiscateTool(issuanceId);
+        return ResponseEntity.ok(ApiResponseDto.ok(null, "Tool marked as confiscated successfully."));
+    }
+
+    // --- WORKER-CENTRIC VIEWS ---
+
+    @GetMapping("/worker/{workerId}/issued")
+    public ResponseEntity<ApiResponseDto<Page<ToolIssuanceResponseDto>>> getToolsByWorker(
+            @PathVariable String workerId,
+            @ModelAttribute PageableDto pageableDto) {
+        Page<ToolIssuanceResponseDto> issuedTools = toolService.getMyIssuedTools(pageableDto);
+        return ResponseEntity.ok(ApiResponseDto.ok(issuedTools));
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.coditas.product.dto;
 
+import com.example.coditas.common.validation.ValidImage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -27,6 +28,7 @@ public class ProductCreateRequestDto {
     @NotNull(message = "Category is required")
     private Long categoryId;
 
+    @ValidImage
     @NotNull(message = "Image is required")
     private MultipartFile image;
 }

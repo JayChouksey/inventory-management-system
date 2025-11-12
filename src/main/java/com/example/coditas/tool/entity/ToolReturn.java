@@ -22,10 +22,10 @@ public class ToolReturn {
     private ToolIssuance issuance;
 
     @Column(name = "fit_quantity", nullable = false)
-    private Integer fitQuantity = 0;
+    private Long fitQuantity = 0L;
 
     @Column(name = "unfit_quantity", nullable = false)
-    private Integer unfitQuantity = 0;
+    private Long unfitQuantity = 0L;
 
     @ManyToOne @JoinColumn(name = "updated_by")
     private User updatedBy;

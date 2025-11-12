@@ -3,6 +3,8 @@ package com.example.coditas.tool.repository;
 import com.example.coditas.tool.dto.ToolFilterDto;
 import com.example.coditas.tool.entity.Tool;
 import com.example.coditas.tool.entity.ToolCategory;
+import com.example.coditas.tool.enums.Expensive;
+import com.example.coditas.tool.enums.Perishable;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
@@ -18,6 +20,7 @@ import java.util.List;
 public class ToolSpecifications {
 
     public static Specification<Tool> withFilters(ToolFilterDto filter) {
+
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -29,10 +32,12 @@ public class ToolSpecifications {
                 predicates.add(cb.equal(root.get("category").get("id"), filter.getCategoryId()));
             }
             if (filter.getPerishable() != null) {
-                predicates.add(cb.equal(root.get("isPerishable"), filter.getPerishable()));
+                Perishable isPerishable = Perishable.getType(filter.getPerishable().toUpperCase());
+                predicates.add(cb.equal(root.get("isPerishable"), isPerishable));
             }
             if (filter.getExpensive() != null) {
-                predicates.add(cb.equal(root.get("isExpensive"), filter.getExpensive()));
+                Expensive isExpensive = Expensive.getType(filter.getExpensive().toUpperCase());
+                predicates.add(cb.equal(root.get("isExpensive"), isExpensive));
             }
             if (filter.getStartDate() != null && filter.getEndDate() != null) {
                 ZonedDateTime start = filter.getStartDate().atStartOfDay(ZoneId.systemDefault());

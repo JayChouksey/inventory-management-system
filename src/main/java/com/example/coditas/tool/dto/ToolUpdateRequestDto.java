@@ -1,5 +1,6 @@
 package com.example.coditas.tool.dto;
 
+import com.example.coditas.common.validation.ValidImage;
 import com.example.coditas.tool.enums.Expensive;
 import com.example.coditas.tool.enums.Perishable;
 import lombok.Getter;
@@ -16,5 +17,6 @@ public class ToolUpdateRequestDto {
     private Perishable isPerishable;
     private Expensive isExpensive;
     private Integer threshold;
+    @ValidImage
     private MultipartFile image;
 }

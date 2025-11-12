@@ -2,7 +2,7 @@ package com.example.coditas.tool.entity;
 
 import com.example.coditas.user.entity.User;
 import com.example.coditas.factory.entity.Factory;
-import com.example.coditas.tool.enums.ToolNature;
+import com.example.coditas.tool.enums.RequestNature;
 import com.example.coditas.tool.enums.ToolRequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +21,7 @@ public class ToolRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "request_number", nullable = false, unique = true, length = 50)
     private String requestNumber;
@@ -36,7 +36,7 @@ public class ToolRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ToolNature nature = ToolNature.FRESH;
+    private RequestNature nature = RequestNature.FRESH;
 
     @ManyToOne
     @JoinColumn(name = "approved_by")
@@ -57,5 +57,16 @@ public class ToolRequest {
     private ZonedDateTime updatedAt;
 
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
-    private List<ToolRequestMapping> tools;
+    private List<ToolRequestMapping> toolRequestMappings;
+
+    @PrePersist
+    protected void onCreate(){
+        createdAt = ZonedDateTime.now();
+        updatedAt = ZonedDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        updatedAt = ZonedDateTime.now();
+    }
 }

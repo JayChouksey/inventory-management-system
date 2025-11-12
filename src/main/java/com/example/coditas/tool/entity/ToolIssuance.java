@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -18,7 +19,7 @@ public class ToolIssuance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne @JoinColumn(name = "factory_id", nullable = false)
     private Factory factory;
@@ -32,14 +33,32 @@ public class ToolIssuance {
     @ManyToOne @JoinColumn(name = "issuer_id")
     private User issuer;
 
+    @ManyToOne
+    @JoinColumn(name = "tool_id", nullable = false)
+    private Tool tool;
+
+    @Column(nullable = false)
+    private Long quantity;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "issuance_status", nullable = false)
     private ToolIssuanceStatus status = ToolIssuanceStatus.ISSUED;
 
+
+    // TODO: Change ZoneDateTime to LocalDateTime
     @CreatedDate
     @Column(name = "issued_at", nullable = false, updatable = false)
-    private ZonedDateTime issuedAt;
+    private LocalDateTime issuedAt;
 
     @Column(name = "returned_at")
-    private ZonedDateTime returnedAt;
+    private LocalDateTime returnedAt;
+
+    @Column(name = "return_date")
+    private LocalDateTime returnDate;
+
+    @PrePersist
+    protected void onCreate(){
+        issuedAt = LocalDateTime.now();
+    }
+
 }

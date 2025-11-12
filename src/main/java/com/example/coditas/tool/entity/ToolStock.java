@@ -28,13 +28,13 @@ public class ToolStock {
     private Tool tool;
 
     @Column(name = "total_quantity", nullable = false)
-    private Integer totalQuantity = 0;
+    private Long totalQuantity = 0L;
 
     @Column(name = "available_quantity", nullable = false)
-    private Integer availableQuantity = 0;
+    private Long availableQuantity = 0L;
 
     @Column(name = "issued_quantity", nullable = false)
-    private Integer issuedQuantity = 0;
+    private Long issuedQuantity = 0L;
 
     @LastModifiedDate
     @Column(name = "last_updated_at", nullable = false)

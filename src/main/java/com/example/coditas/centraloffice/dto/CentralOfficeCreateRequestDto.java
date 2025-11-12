@@ -1,5 +1,6 @@
 package com.example.coditas.centraloffice.dto;
 
+import com.example.coditas.common.validation.ValidImage;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,7 @@ public class CentralOfficeCreateRequestDto {
     private String newHeadName;    // create new
     private String newHeadEmail;
     private String newHeadPhone;
+
+    @ValidImage
     private MultipartFile newHeadImage;
 }

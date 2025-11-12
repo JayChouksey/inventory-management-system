@@ -14,8 +14,8 @@ import java.time.LocalDate;
 public class ToolFilterDto {
     private String name;
     private Integer categoryId;
-    private Perishable perishable;
-    private Expensive expensive;
+    private String perishable;
+    private String expensive;
     private String stockStatus; // "IN_STOCK", "LOW", "CRITICAL", "OUT_OF_STOCK"
     private LocalDate startDate;
     private LocalDate endDate;
