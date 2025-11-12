@@ -7,11 +7,17 @@ pipeline {
         ECR_URI="352731040690.dkr.ecr.ap-south-1.amazonaws.com"
         AWS_CREDS = credentials('aws-creds')
         AWS_DEFAULT_REGION='ap-south-1'
-        // ENV_FILE=credentials('ENV_FILE_JAY')
+        ENV_FILE=credentials('ENV_FILE_JAY')
     }
 
+    
     stages {
 
+        stage('Build') {
+            steps {
+                sh 'mvn clean install -DskipTests'
+            }
+        }
         stage('AWS Login') {
             
             steps {
