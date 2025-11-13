@@ -16,7 +16,7 @@ public class DealerInvoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "invoice_id", nullable = false, unique = true, length = 50)
     private String invoiceId;
@@ -25,8 +25,9 @@ public class DealerInvoice {
     @JoinColumn(name = "dealer_id", nullable = false)
     private User dealer;
 
-    @Column(name = "order_id")
-    private Integer orderId;
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private DealerOrder order;
 
     private String url;
 

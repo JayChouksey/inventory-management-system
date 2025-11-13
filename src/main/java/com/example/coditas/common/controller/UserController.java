@@ -55,10 +55,10 @@ public class UserController {
     // Owner – Full employee list (filter + search + page + sort)
     @GetMapping("/employees")
     public ResponseEntity<ApiResponseDto<Page<UserResponseDto>>> getEmployees(
-            @ModelAttribute UserFilterDto filter,
+            @ModelAttribute UserFilterDto filter, @RequestParam(value = "q", required = false) String query,
             @ModelAttribute PageableDto page) {
 
-        Page<UserResponseDto> data = userService.searchEmployees(filter, page);
+        Page<UserResponseDto> data = userService.searchEmployees(filter, query, page);
         return ResponseEntity.ok(ApiResponseDto.paged(
                 data, page.getPage(), page.getSize(), data.getTotalElements()
         ));

@@ -33,4 +33,6 @@ public interface DealerOrderRepository extends JpaRepository<DealerOrder, Long> 
     @Modifying
     @Query("UPDATE DealerOrder o SET o.centralOffice.id = :newOfficeId WHERE o.centralOffice.id = :oldOfficeId")
     void reassignOrders(@Param("oldOfficeId") Long oldOfficeId, @Param("newOfficeId") Long newOfficeId);
+
+    Optional<DealerOrder> findByOrderId(String orderId);
 }

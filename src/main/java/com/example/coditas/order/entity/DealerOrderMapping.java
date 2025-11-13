@@ -13,7 +13,7 @@ public class DealerOrderMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne @JoinColumn(name = "order_id", nullable = false)
     private DealerOrder order;
@@ -22,7 +22,7 @@ public class DealerOrderMapping {
     private Product product;
 
     @Column(nullable = false)
-    private Integer quantity = 0;
+    private Long quantity = 0L;
 
     @Column(name = "unit_price", nullable = false, precision = 12, scale = 2)
     private BigDecimal unitPrice = BigDecimal.ZERO;

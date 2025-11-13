@@ -26,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -251,7 +252,7 @@ public class UserService {
     }
 
     // Search with filters + pagination + sorting
-    public Page<UserResponseDto> searchEmployees(UserFilterDto filter, PageableDto pageReq) {
+    public Page<UserResponseDto> searchEmployees(UserFilterDto filter, String query,  PageableDto pageReq) {
         Specification<User> spec = UserSpecifications.withFilters(
                 filter.getName(),
                 filter.getEmail(),
@@ -261,6 +262,7 @@ public class UserService {
                 filter.getBayId(),
                 filter.getStatus()
         );
+        if (StringUtils.hasText(query)) spec = spec.and(UserSpecifications.globalSearch(query));
 
         Pageable pageable = toPageable(pageReq);
 

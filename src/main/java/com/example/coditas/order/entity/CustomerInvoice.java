@@ -24,8 +24,9 @@ public class CustomerInvoice {
     @ManyToOne @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
 
-    @Column(name = "order_id")
-    private Integer orderId;
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private CustomerOrder order;
 
     private String url;
 

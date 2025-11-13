@@ -13,7 +13,7 @@ public class CustomerOrderMapping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne @JoinColumn(name = "order_id", nullable = false)
     private CustomerOrder order;

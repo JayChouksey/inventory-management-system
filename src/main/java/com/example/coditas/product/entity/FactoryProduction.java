@@ -22,7 +22,7 @@ public class FactoryProduction {
     private Product product;
 
     @Column(name = "production_quantity", nullable = false)
-    private Integer productionQuantity = 0;
+    private Long productionQuantity = 0L;
 
     @Column(name = "production_date", nullable = false)
     private LocalDate productionDate;

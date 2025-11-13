@@ -20,7 +20,7 @@ public class ProductRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne @JoinColumn(name = "central_officer_id", nullable = false)
     private User centralOfficer;
@@ -41,5 +41,5 @@ public class ProductRequest {
     private ZonedDateTime updatedAt;
 
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
-    private List<ProductRequestMapping> products;
+    private List<ProductRequestMapping> productMappings;
 }

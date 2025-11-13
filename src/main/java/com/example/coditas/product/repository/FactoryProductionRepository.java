@@ -1,6 +1,9 @@
 package com.example.coditas.product.repository;
 
+import com.example.coditas.factory.entity.Factory;
 import com.example.coditas.product.entity.FactoryProduction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,9 +25,5 @@ public interface FactoryProductionRepository extends JpaRepository<FactoryProduc
             @Param("end") LocalDate end
     );
 
-    List<FactoryProduction> findByFactoryIdAndProductionDateBetween(
-            Long factoryId,
-            LocalDate start,
-            LocalDate end
-    );
+    Page<FactoryProduction> findByFactory(Factory factory, Pageable pageable);
 }
