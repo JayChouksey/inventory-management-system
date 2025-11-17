@@ -64,8 +64,7 @@ public class FactoryProductionService {
                 .productionDate(dto.getProductionDate())
                 .build();
 
-        production = factoryProductionRepository.saveAndFlush(production);
-        entityManager.refresh(production);
+        production = factoryProductionRepository.save(production);
 
         // Update stock
         ProductStock stock = productStockRepository.findByFactoryAndProduct(factory, product)
@@ -84,6 +83,7 @@ public class FactoryProductionService {
         return toProductionDto(production);
     }
 
+    // TODO: Combine if time permits
     // ──────────────────────────────────────────────────────────────
     // GET STOCK BY FACTORY
     // ──────────────────────────────────────────────────────────────

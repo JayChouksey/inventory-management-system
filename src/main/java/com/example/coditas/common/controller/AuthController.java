@@ -29,12 +29,12 @@ public class AuthController {
     }
 
     @PostMapping(value = "/signup", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> signup(
-            @Valid @ModelAttribute DistributorSignUpDto dto
+    public ResponseEntity<ApiResponseDto<DistributorSignUpResponseDto>> signup(
+            @Valid @ModelAttribute DistributorSignUpRequestDto dto
     ){
 
-        String data = userService.createDistributor(dto);
-        ApiResponseDto<String> responseBody = ApiResponseDto.ok(data, "Success");
+        DistributorSignUpResponseDto data = userService.createDistributor(dto);
+        ApiResponseDto<DistributorSignUpResponseDto> responseBody = ApiResponseDto.ok(data, "Success");
 
         return ResponseEntity.ok(responseBody);
     }

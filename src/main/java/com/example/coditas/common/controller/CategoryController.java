@@ -1,10 +1,6 @@
 package com.example.coditas.common.controller;
 
-import com.example.coditas.common.dto.ApiResponseDto;
-import com.example.coditas.common.dto.PageableDto;
-import com.example.coditas.common.dto.CategoryFilterDto;
-import com.example.coditas.common.dto.CategoryRequestDto;
-import com.example.coditas.common.dto.CategoryResponseDto;
+import com.example.coditas.common.dto.*;
 import com.example.coditas.common.factorydesign.CategoryFactory;
 import com.example.coditas.common.service.CategoryService;
 import jakarta.validation.Valid;
@@ -25,7 +21,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<ApiResponseDto<Page<CategoryResponseDto>>> getCategories(
-            @ModelAttribute CategoryFilterDto filter,
+            @ModelAttribute GenericFilterDto filter,
             @RequestParam String type,
             @ModelAttribute PageableDto page) {
 

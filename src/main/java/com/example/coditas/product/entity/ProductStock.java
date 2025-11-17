@@ -21,5 +21,5 @@ public class ProductStock {
     private Factory factory;
 
     @Column(nullable = false)
-    private Long quantity = 0L;
+    private Long quantity;
 }

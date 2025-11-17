@@ -2,7 +2,6 @@ package com.example.coditas.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
@@ -50,7 +49,7 @@ public class ApiResponseDto<T> {
                 .build();
     }
 
-    public static <T> ApiResponseDto<T> error(String message, HttpStatus status) {
+    public static <T> ApiResponseDto<T> error(String message) {
         return ApiResponseDto.<T>builder()
                 .success(false)
                 .message(message)

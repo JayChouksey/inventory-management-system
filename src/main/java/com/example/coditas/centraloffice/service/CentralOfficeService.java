@@ -1,16 +1,17 @@
 package com.example.coditas.centraloffice.service;
 
+import com.example.coditas.common.dto.GenericFilterDto;
+import com.example.coditas.common.specification.GenericFilterSpecFactory;
+import com.example.coditas.common.util.TempPasswordGenerator;
 import com.example.coditas.user.entity.Role;
 import com.example.coditas.user.entity.User;
 import com.example.coditas.user.repository.RoleRepository;
 import com.example.coditas.user.repository.UserRepository;
 import com.example.coditas.centraloffice.dto.CentralOfficeCreateRequestDto;
-import com.example.coditas.centraloffice.dto.CentralOfficeFilterDto;
 import com.example.coditas.centraloffice.dto.CentralOfficeResponseDto;
 import com.example.coditas.centraloffice.dto.CentralOfficeUpdateRequestDto;
 import com.example.coditas.centraloffice.entity.CentralOffice;
 import com.example.coditas.centraloffice.repository.CentralOfficeRepository;
-import com.example.coditas.centraloffice.repository.CentralOfficeSpecifications;
 import com.example.coditas.common.dto.PageableDto;
 import com.example.coditas.common.enums.ActiveStatus;
 import com.example.coditas.common.enums.UserRole;
@@ -37,6 +38,7 @@ import java.time.format.DateTimeFormatter;
 public class CentralOfficeService {
 
     private static final String DEFAULT_PROFILE_PIC = "https://res.cloudinary.com/dltuu1hhs/image/upload/v1761553393/cld-sample.jpg";
+    private static final String NOT_FOUND_MESSAGE = "Central Office not found";
 
     private final CentralOfficeRepository centralOfficeRepository;
     private final UserRepository userRepository;
@@ -45,15 +47,18 @@ public class CentralOfficeService {
     private final CloudinaryService cloudinaryService;
     private final PasswordEncoder passwordEncoder;
 
-    public Page<CentralOfficeResponseDto> searchOffices(CentralOfficeFilterDto filter, PageableDto pageReq) {
-        Specification<CentralOffice> spec = CentralOfficeSpecifications.withFilters(filter);
+    public Page<CentralOfficeResponseDto> searchOffices(GenericFilterDto filter, PageableDto pageReq) {
+        // Filters: name, city, plantHeadName
+        Specification<CentralOffice> spec = GenericFilterSpecFactory.forCentralOffice(filter);
         Pageable pageable = toPageable(pageReq);
         Page<CentralOffice> page = centralOfficeRepository.findAll(spec, pageable);
         return page.map(this::toDto);
     }
 
     public Page<CentralOfficeResponseDto> globalSearch(String q, PageableDto pageReq) {
-        Specification<CentralOffice> spec = CentralOfficeSpecifications.globalSearch(q);
+        Specification<CentralOffice> spec = GenericFilterSpecFactory.globalSearch(
+                new GenericFilterDto() {{setName(q);}},"city","head.name"
+        );
         Pageable pageable = toPageable(pageReq);
         Page<CentralOffice> page = centralOfficeRepository.findAll(spec, pageable);
         return page.map(this::toDto);
@@ -61,7 +66,7 @@ public class CentralOfficeService {
 
     public CentralOfficeResponseDto getOfficeDetail(String id) {
         CentralOffice office = centralOfficeRepository.findByCentralOfficeId(id)
-                .orElseThrow(() -> new CustomException("Central Office not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
         return toDto(office);
     }
 
@@ -87,7 +92,7 @@ public class CentralOfficeService {
     @Transactional
     public CentralOfficeResponseDto updateOffice(String id, CentralOfficeUpdateRequestDto dto) {
         CentralOffice office = centralOfficeRepository.findByCentralOfficeId(id)
-                .orElseThrow(() -> new CustomException("Central Office not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
 
         if (dto.getCity() != null && !dto.getCity().trim().isBlank()) {
             office.setCity(dto.getCity().trim());
@@ -112,7 +117,11 @@ public class CentralOfficeService {
     @Transactional
     public String deleteOffice(String id) {
         CentralOffice office = centralOfficeRepository.findByCentralOfficeId(id)
-                .orElseThrow(() -> new CustomException("Central Office not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
+
+        if(office.getIsActive().equals(ActiveStatus.INACTIVE)){
+            throw new CustomException("The office is already deleted", HttpStatus.BAD_REQUEST);
+        }
 
         long activeCount = centralOfficeRepository.countByIsActive(ActiveStatus.ACTIVE);
         if (activeCount <= 1) {
@@ -155,7 +164,7 @@ public class CentralOfficeService {
         }
 
         String userId = generateUniqueUserId();
-        String tempPassword = "12345678"; // TODO: generate
+        String tempPassword = TempPasswordGenerator.generatePassword(dto.getNewHeadName(), dto.getNewHeadPhone());
 
         User user = User.builder()
                 .userId(userId)

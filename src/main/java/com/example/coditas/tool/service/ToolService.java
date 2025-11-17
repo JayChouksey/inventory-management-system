@@ -1,8 +1,10 @@
 package com.example.coditas.tool.service;
 
+import com.example.coditas.common.dto.GenericFilterDto;
 import com.example.coditas.common.dto.PageableDto;
 import com.example.coditas.common.enums.UserRole;
 import com.example.coditas.common.exception.CustomException;
+import com.example.coditas.common.specification.GenericFilterSpecFactory;
 import com.example.coditas.common.util.CloudinaryService;
 import com.example.coditas.factory.entity.Factory;
 import com.example.coditas.factory.entity.UserFactoryMapping;
@@ -18,7 +20,6 @@ import com.example.coditas.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -54,18 +54,18 @@ public class ToolService {
     private final CloudinaryService cloudinaryService;
     private final EntityManager entityManager;
 
-    // ──────────────────────────────────────────────────────────────
-    // EXISTING: TOOL CRUD (Yours)
-    // ──────────────────────────────────────────────────────────────
-    public Page<ToolResponseDto> searchTools(ToolFilterDto filter, PageableDto pageReq) {
-        Specification<Tool> spec = ToolSpecifications.withFilters(filter);
+    public Page<ToolResponseDto> searchTools(GenericFilterDto filter, PageableDto pageReq) {
+        Specification<Tool> spec = GenericFilterSpecFactory.forTool(filter);
         Pageable pageable = toPageableForTool(pageReq);
         Page<Tool> page = toolRepository.findAll(spec, pageable);
         return page.map(this::toDto);
     }
 
     public Page<ToolResponseDto> globalSearch(String q, PageableDto pageReq) {
-        Specification<Tool> spec = ToolSpecifications.globalSearch(q);
+        Specification<Tool> spec = GenericFilterSpecFactory.globalSearch(
+                new GenericFilterDto(){{setName(q);}},
+                "name","category.name"
+        );
         Pageable pageable = toPageableForTool(pageReq);
         Page<Tool> page = toolRepository.findAll(spec, pageable);
         return page.map(this::toDto);

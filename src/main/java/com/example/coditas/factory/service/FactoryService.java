@@ -1,5 +1,7 @@
 package com.example.coditas.factory.service;
 
+import com.example.coditas.common.dto.GenericFilterDto;
+import com.example.coditas.common.specification.GenericFilterSpecFactory;
 import com.example.coditas.user.entity.Role;
 import com.example.coditas.user.entity.User;
 import com.example.coditas.user.repository.RoleRepository;
@@ -11,12 +13,10 @@ import com.example.coditas.common.enums.ActiveStatus;
 import com.example.coditas.common.enums.UserRole;
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.factory.dto.FactoryCreateRequestDto;
-import com.example.coditas.factory.dto.FactoryFilterDto;
 import com.example.coditas.factory.dto.FactoryResponseDto;
 import com.example.coditas.factory.dto.FactoryUpdateRequestDto;
 import com.example.coditas.factory.entity.Factory;
 import com.example.coditas.factory.repository.FactoryRepository;
-import com.example.coditas.factory.repository.FactorySpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -123,8 +123,9 @@ public class FactoryService {
         return "Factory deleted successfully!";
     }
 
-    public Page<FactoryResponseDto> searchFactories(FactoryFilterDto filter, PageableDto pageReq) {
-        Specification<Factory> spec = FactorySpecifications.withFilters(filter);
+    public Page<FactoryResponseDto> searchFactories(GenericFilterDto filter, PageableDto pageReq) {
+        // Filter: name, city, plantHeadName, centralOfficeId, status, startDate, endDate
+        Specification<Factory> spec = GenericFilterSpecFactory.forFactory(filter);
         Pageable pageable = toPageable(pageReq);
         Page<Factory> page = factoryRepository.findAll(spec, pageable);
 
@@ -132,7 +133,10 @@ public class FactoryService {
     }
 
     public Page<FactoryResponseDto> globalSearch(String q, PageableDto pageReq) {
-        Specification<Factory> spec = FactorySpecifications.globalSearch(q);
+        Specification<Factory> spec = GenericFilterSpecFactory.globalSearch(
+                new GenericFilterDto() {{setName(q);}},
+                "name", "city", "address", "plantHead.name"
+        );
         Pageable pageable = toPageable(pageReq);
         Page<Factory> page = factoryRepository.findAll(spec, pageable);
 

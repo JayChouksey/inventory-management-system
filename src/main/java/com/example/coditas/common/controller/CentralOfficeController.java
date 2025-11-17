@@ -1,11 +1,11 @@
 package com.example.coditas.common.controller;
 
 import com.example.coditas.centraloffice.dto.CentralOfficeCreateRequestDto;
-import com.example.coditas.centraloffice.dto.CentralOfficeFilterDto;
 import com.example.coditas.centraloffice.dto.CentralOfficeResponseDto;
 import com.example.coditas.centraloffice.dto.CentralOfficeUpdateRequestDto;
 import com.example.coditas.centraloffice.service.CentralOfficeService;
 import com.example.coditas.common.dto.ApiResponseDto;
+import com.example.coditas.common.dto.GenericFilterDto;
 import com.example.coditas.common.dto.PageableDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/central-offices")
+@RequestMapping("/api/v1/central-offices")
 @RequiredArgsConstructor
 @Slf4j
 public class CentralOfficeController {
@@ -26,7 +26,7 @@ public class CentralOfficeController {
 
     @GetMapping
     public ResponseEntity<ApiResponseDto<Page<CentralOfficeResponseDto>>> getOffices(
-            @ModelAttribute CentralOfficeFilterDto filter,
+            @ModelAttribute GenericFilterDto filter,
             @ModelAttribute PageableDto page) {
         Page<CentralOfficeResponseDto> data = service.searchOffices(filter, page);
         return ResponseEntity.ok(ApiResponseDto.paged(data, page.getPage(), page.getSize(), data.getTotalElements()));

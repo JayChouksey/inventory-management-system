@@ -1,5 +1,7 @@
 package com.example.coditas.product.service;
 
+import com.example.coditas.common.dto.GenericFilterDto;
+import com.example.coditas.common.specification.GenericFilterSpecFactory;
 import com.example.coditas.user.entity.User;
 import com.example.coditas.user.repository.UserRepository;
 import com.example.coditas.common.dto.PageableDto;
@@ -7,14 +9,12 @@ import com.example.coditas.common.enums.ActiveStatus;
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.common.util.CloudinaryService;
 import com.example.coditas.product.dto.ProductCreateRequestDto;
-import com.example.coditas.product.dto.ProductFilterDto;
 import com.example.coditas.product.dto.ProductResponseDto;
 import com.example.coditas.product.dto.ProductUpdateRequestDto;
 import com.example.coditas.product.entity.Product;
 import com.example.coditas.product.entity.ProductCategory;
 import com.example.coditas.product.repository.ProductCategoryRepository;
 import com.example.coditas.product.repository.ProductRepository;
-import com.example.coditas.product.repository.ProductSpecifications;
 import com.example.coditas.product.repository.ProductStockRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,15 +43,17 @@ public class ProductService {
     private final ProductCategoryRepository categoryRepository;
     private final CloudinaryService cloudinaryService;
 
-    public Page<ProductResponseDto> searchProducts(ProductFilterDto filter, PageableDto pageReq) {
-        Specification<Product> spec = ProductSpecifications.withFilters(filter);
+    public Page<ProductResponseDto> searchProducts(GenericFilterDto filter, PageableDto pageReq) {
+        Specification<Product> spec = GenericFilterSpecFactory.forProduct(filter);
         Pageable pageable = toPageableForProduct(pageReq);
         Page<Product> page = productRepository.findAll(spec, pageable);
         return page.map(this::toDto);
     }
 
     public Page<ProductResponseDto> globalSearch(String q, PageableDto pageReq) {
-        Specification<Product> spec = ProductSpecifications.globalSearch(q);
+        Specification<Product> spec = GenericFilterSpecFactory.globalSearch(
+                new GenericFilterDto(){{setName(q);}}, "name"
+        );
         Pageable pageable = toPageableForProduct(pageReq);
         Page<Product> page = productRepository.findAll(spec, pageable);
         return page.map(this::toDto);

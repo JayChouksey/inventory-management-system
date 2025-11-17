@@ -1,9 +1,9 @@
 package com.example.coditas.common.controller;
 
 import com.example.coditas.common.dto.ApiResponseDto;
+import com.example.coditas.common.dto.GenericFilterDto;
 import com.example.coditas.common.dto.PageableDto;
 import com.example.coditas.factory.dto.FactoryCreateRequestDto;
-import com.example.coditas.factory.dto.FactoryFilterDto;
 import com.example.coditas.factory.dto.FactoryResponseDto;
 import com.example.coditas.factory.dto.FactoryUpdateRequestDto;
 import com.example.coditas.factory.service.FactoryService;
@@ -14,9 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// FactoryController.java
 @RestController
-@RequestMapping("/api/v1/admin/factories")
+@RequestMapping("/api/v1/factories")
 @RequiredArgsConstructor
 public class FactoryController {
 
@@ -49,7 +48,7 @@ public class FactoryController {
 
     @GetMapping
     public ResponseEntity<ApiResponseDto<Page<FactoryResponseDto>>> getFactories(
-            @ModelAttribute FactoryFilterDto filter,
+            @ModelAttribute GenericFilterDto filter,
             @ModelAttribute PageableDto page) {
 
         Page<FactoryResponseDto> data = factoryService.searchFactories(filter, page);

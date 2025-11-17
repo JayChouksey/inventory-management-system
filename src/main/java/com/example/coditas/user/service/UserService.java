@@ -54,7 +54,7 @@ public class UserService {
     private final CloudinaryService cloudinaryService;
 
     @Transactional
-    public String createDistributor(DistributorSignUpDto dto) {
+    public DistributorSignUpResponseDto createDistributor(DistributorSignUpRequestDto dto) {
 
         // Business validation
         if (userRepository.existsByEmail(dto.getEmail())) {
@@ -91,17 +91,16 @@ public class UserService {
                 .build();
 
         // Save with flush to catch DB constraints early
-        distributor = userRepository.saveAndFlush(distributor);
+        distributor = userRepository.save(distributor);
 
-        // set created_by = himself
-        distributor.setCreatedBy(distributor);
-        userRepository.save(distributor);
-
-        entityManager.refresh(distributor); // Ensure fresh state
         log.info("Distributor created successfully: {} ({})", distributor.getName(), distributor.getUserId());
 
-        return "Distributor Created Successfully!"; // TODO: Change it to user object dto
-
+        return DistributorSignUpResponseDto.builder()
+                .userId(distributor.getUserId())
+                .name(distributor.getName())
+                .email(distributor.getEmail())
+                .phone(distributor.getPhone())
+                .build();
     }
 
     @Transactional
@@ -130,7 +129,7 @@ public class UserService {
 
         // Create the object to add the Create By
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User createdBy = userRepository.findByEmail("admin@company.com") // TODO: Change it when implement JWT Token
+        User createdBy = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new CustomException("Requester user not found", HttpStatus.NOT_FOUND));
 
         // Build User entity
@@ -224,7 +223,7 @@ public class UserService {
 
         // Prevent self-delete
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userRepository.findByEmail("admin@company.com") // TODO: Change it when implement JWT Token
+        User currentUser = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new CustomException("Requester user not found", HttpStatus.NOT_FOUND));
         if (currentUser != null && currentUser.getUserId().equals(userId)) {
             throw new CustomException("You cannot delete yourself!", HttpStatus.FORBIDDEN);
@@ -389,20 +388,8 @@ public class UserService {
 
     // Generate sequential userId
     private String generateUniqueUserId() {
-
-        String lastUserId = userRepository.findTopByOrderByCreatedAtDesc()
-                .orElseThrow(() ->
-                        new CustomException("No existing user found. Starting from first ID.", HttpStatus.NOT_FOUND)
-                )
-                .getUserId();
-
-        int nextNumber = 1;
-        if (lastUserId != null) {
-            String numberPart = lastUserId.substring("USR".length() + 1);
-            nextNumber = Integer.parseInt(numberPart) + 1;
-        }
-
-        return "USR" + String.format("%03d", nextNumber); // USR-001
+        long count = userRepository.count();
+        return String.format("USR-%04d", count + 1);
     }
 
     //Convert entity to DTO

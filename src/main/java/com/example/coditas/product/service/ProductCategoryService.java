@@ -1,14 +1,11 @@
 package com.example.coditas.product.service;
 
-import com.example.coditas.common.dto.CategoryFilterDto;
-import com.example.coditas.common.dto.CategoryRequestDto;
-import com.example.coditas.common.dto.CategoryResponseDto;
-import com.example.coditas.common.dto.PageableDto;
+import com.example.coditas.common.dto.*;
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.common.service.CategoryService;
+import com.example.coditas.common.specification.GenericFilterSpecFactory;
 import com.example.coditas.product.entity.ProductCategory;
 import com.example.coditas.product.repository.ProductCategoryRepository;
-import com.example.coditas.product.repository.ProductCategorySpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,15 +24,18 @@ public class ProductCategoryService implements CategoryService {
 
     private final ProductCategoryRepository categoryRepository;
 
-    public Page<CategoryResponseDto> searchCategories(CategoryFilterDto filter, PageableDto pageReq) {
-        Specification<ProductCategory> spec = ProductCategorySpecifications.withFilters(filter);
+    public Page<CategoryResponseDto> searchCategories(GenericFilterDto filter, PageableDto pageReq) {
+        Specification<ProductCategory> spec = GenericFilterSpecFactory.forProductCategory(filter);
         Pageable pageable = toPageable(pageReq);
         Page<ProductCategory> page = categoryRepository.findAll(spec, pageable);
         return page.map(this::toDto);
     }
 
     public Page<CategoryResponseDto> globalSearch(String q, PageableDto pageReq) {
-        Specification<ProductCategory> spec = ProductCategorySpecifications.globalSearch(q);
+        Specification<ProductCategory> spec = GenericFilterSpecFactory.globalSearch(
+                new GenericFilterDto(){{setName(q);}},
+                "name"
+        );
         Pageable pageable = toPageable(pageReq);
         Page<ProductCategory> page = categoryRepository.findAll(spec, pageable);
         return page.map(this::toDto);

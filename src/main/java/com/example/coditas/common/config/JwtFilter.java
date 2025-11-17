@@ -37,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
             try{
                 username = jwtService.extractUserName(token);
             }catch (Exception e){
-                sendUnauthorized(response, "Invalid or malformed token");
+                sendUnauthorized(response);
                 return;
             }
         }
@@ -59,9 +59,9 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void sendUnauthorized(HttpServletResponse response, String message) throws IOException {
+    private void sendUnauthorized(HttpServletResponse response) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
-        response.getWriter().write("{\"error\":\"" + message + "\"}");
+        response.getWriter().write("{\"error\":\"" + "Invalid or malformed token" + "\"}");
     }
 }

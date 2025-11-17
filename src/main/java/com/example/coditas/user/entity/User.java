@@ -74,6 +74,7 @@ public class User {
     protected void onCreate(){
         createdAt = ZonedDateTime.now();
         updatedAt = ZonedDateTime.now();
+        createdBy = this;
     }
 
     @PreUpdate

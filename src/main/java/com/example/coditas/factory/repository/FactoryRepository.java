@@ -18,7 +18,6 @@ public interface FactoryRepository extends JpaRepository<Factory, Long> {
     List<Factory> findAllByIsActive(ActiveStatus isActive);
     Optional<Factory> findByFactoryId(String id);
     Optional<Factory> findActiveByFactoryId(String id);// find what query is getting executed.
-    Optional<Factory> findById(Long id);
 
     Page<Factory> findAll(Specification<Factory> spec, Pageable pageable);
 }

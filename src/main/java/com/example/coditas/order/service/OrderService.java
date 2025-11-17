@@ -100,8 +100,7 @@ public class OrderService {
         // Link back
         mappings.forEach(m -> m.setOrder(order));
 
-        DealerOrder savedOrder = dealerOrderRepository.saveAndFlush(order);
-        entityManager.refresh(savedOrder);
+        DealerOrder savedOrder = dealerOrderRepository.save(order);
 
         log.info("Dealer order created: {} by {}", orderId, dealer.getName());
         return toResponseDto(savedOrder, items);
@@ -117,6 +116,7 @@ public class OrderService {
         DealerOrder order = dealerOrderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new CustomException("Order not found", HttpStatus.NOT_FOUND));
 
+        // TODO: Check while fetching
         if (order.getStatus() != DealerOrderStatus.PENDING) {
             throw new CustomException("Order already processed: " + order.getStatus(), HttpStatus.CONFLICT);
         }
@@ -136,6 +136,7 @@ public class OrderService {
                             "No stock for " + product.getName() + " in factory " + factory.getName(),
                             HttpStatus.CONFLICT));
 
+            // TODO: Merge the check while fetching above
             if (factoryStock.getQuantity() < qty) {
                 throw new CustomException(
                         "Insufficient stock: " + product.getName() + " (Need: " + qty + ", Avail: " + factoryStock.getQuantity() + ")",
@@ -169,6 +170,7 @@ public class OrderService {
                 .url("/invoices/dealer/" + orderId + ".pdf")
                 .build();
 
+        // TODO
         DealerInvoice savedInvoice = dealerInvoiceRepository.saveAndFlush(invoice);
         entityManager.refresh(savedInvoice);
 
@@ -195,6 +197,7 @@ public class OrderService {
         return toResponseDto(order, mapItems(order.getItems()));
     }
 
+    // TODO:
     // ──────────────────────────────────────────────────────────────
     // HELPER METHODS
     // ──────────────────────────────────────────────────────────────

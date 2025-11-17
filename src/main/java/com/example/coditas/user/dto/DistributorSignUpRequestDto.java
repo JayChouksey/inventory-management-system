@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
-public class DistributorSignUpDto {
+public class DistributorSignUpRequestDto {
 
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 30, message = "Name must be between 3 and 30 characters")

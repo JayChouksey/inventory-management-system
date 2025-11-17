@@ -1,9 +1,9 @@
 package com.example.coditas.common.controller;
 
 import com.example.coditas.common.dto.ApiResponseDto;
+import com.example.coditas.common.dto.GenericFilterDto;
 import com.example.coditas.common.dto.PageableDto;
 import com.example.coditas.product.dto.ProductCreateRequestDto;
-import com.example.coditas.product.dto.ProductFilterDto;
 import com.example.coditas.product.dto.ProductResponseDto;
 import com.example.coditas.product.dto.ProductUpdateRequestDto;
 import com.example.coditas.product.service.ProductService;
@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/products")
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
@@ -26,7 +26,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ApiResponseDto<Page<ProductResponseDto>>> getProducts(
-            @ModelAttribute ProductFilterDto filter,
+            @ModelAttribute GenericFilterDto filter,
             @ModelAttribute PageableDto page) {
         Page<ProductResponseDto> data = productService.searchProducts(filter, page);
         return ResponseEntity.ok(ApiResponseDto.paged(data, page.getPage(), page.getSize(), data.getTotalElements()));

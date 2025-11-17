@@ -1,14 +1,11 @@
 package com.example.coditas.tool.service;
 
-import com.example.coditas.common.dto.PageableDto;
+import com.example.coditas.common.dto.*;
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.common.service.CategoryService;
-import com.example.coditas.common.dto.CategoryFilterDto;
-import com.example.coditas.common.dto.CategoryRequestDto;
-import com.example.coditas.common.dto.CategoryResponseDto;
+import com.example.coditas.common.specification.GenericFilterSpecFactory;
 import com.example.coditas.tool.entity.ToolCategory;
 import com.example.coditas.tool.repository.ToolCategoryRepository;
-import com.example.coditas.tool.repository.ToolCategorySpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,15 +24,18 @@ public class ToolCategoryService implements CategoryService {
 
     private final ToolCategoryRepository categoryRepository;
 
-    public Page<CategoryResponseDto> searchCategories(CategoryFilterDto filter, PageableDto pageReq) {
-        Specification<ToolCategory> spec = ToolCategorySpecifications.withFilters(filter);
+    public Page<CategoryResponseDto> searchCategories(GenericFilterDto filter, PageableDto pageReq) {
+        Specification<ToolCategory> spec = GenericFilterSpecFactory.forToolCategory(filter);
         Pageable pageable = toPageable(pageReq);
         Page<ToolCategory> page = categoryRepository.findAll(spec, pageable);
         return page.map(this::toDto);
     }
 
     public Page<CategoryResponseDto> globalSearch(String q, PageableDto pageReq) {
-        Specification<ToolCategory> spec = ToolCategorySpecifications.globalSearch(q);
+        Specification<ToolCategory> spec = GenericFilterSpecFactory.globalSearch(
+                new GenericFilterDto(){{setName(q);}},
+                "name"
+        );
         Pageable pageable = toPageable(pageReq);
         Page<ToolCategory> page = categoryRepository.findAll(spec, pageable);
         return page.map(this::toDto);

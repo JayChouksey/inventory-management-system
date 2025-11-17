@@ -29,7 +29,7 @@ public class ToolIssuanceController {
             @PathVariable Long issuanceId,
             @Valid @RequestBody ApproveExtensionDto dto) {
         ToolIssuanceResponseDto updatedIssuance = toolService.processExtensionRequest(issuanceId, dto);
-        String message = dto.getApproved() ? "Extension approved successfully." : "Extension denied.";
+        String message = Boolean.TRUE.equals(dto.getApproved()) ? "Extension approved successfully." : "Extension denied.";
         return ResponseEntity.ok(ApiResponseDto.ok(updatedIssuance, message));
     }
 

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// UserFilterDto.java
 @Getter
 @Setter
 @NoArgsConstructor

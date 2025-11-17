@@ -1,6 +1,7 @@
 package com.example.coditas.common.controller;
 
 import com.example.coditas.common.dto.ApiResponseDto;
+import com.example.coditas.common.dto.GenericFilterDto;
 import com.example.coditas.common.dto.PageableDto;
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.tool.dto.*;
@@ -26,7 +27,7 @@ public class ToolController {
 
     @GetMapping
     public ResponseEntity<ApiResponseDto<Page<ToolResponseDto>>> getTools(
-            @ModelAttribute ToolFilterDto filter,
+            @ModelAttribute GenericFilterDto filter,
             @ModelAttribute PageableDto page) {
         Page<ToolResponseDto> data = toolService.searchTools(filter, page);
         return ResponseEntity.ok(ApiResponseDto.paged(data, page.getPage(), page.getSize(), data.getTotalElements()));
