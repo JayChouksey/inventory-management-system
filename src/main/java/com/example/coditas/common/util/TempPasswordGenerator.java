@@ -1,7 +1,5 @@
 package com.example.coditas.common.util;
 
-import com.example.coditas.user.entity.User;
-
 public class TempPasswordGenerator {
 
     private TempPasswordGenerator() {
@@ -31,7 +29,7 @@ public class TempPasswordGenerator {
             cleanPhone = cleanPhone.substring(cleanPhone.length() - 10);
         }
 
-        return nameBuilder.toString() + cleanPhone;
+        return nameBuilder + cleanPhone;
     }
 
     private static String capitalize(String str) {

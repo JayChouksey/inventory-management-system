@@ -2,7 +2,6 @@ package com.example.coditas.common.specification;
 
 import com.example.coditas.centraloffice.entity.CentralOffice;
 import com.example.coditas.common.dto.GenericFilterDto;
-import com.example.coditas.common.enums.ActiveStatus;
 import com.example.coditas.factory.entity.Factory;
 import com.example.coditas.product.entity.Product;
 import com.example.coditas.product.entity.ProductCategory;
@@ -25,51 +24,45 @@ public class GenericFilterSpecFactory {
 
     private GenericFilterSpecFactory() {}
 
+    private static final String IS_ACTIVE = "isActive";
+    private static final String CREATED_AT = "createdAt";
+    private static final String CITY = "city";
+
     // CENTRAL OFFICE
     public static Specification<CentralOffice> forCentralOffice(GenericFilterDto filter) {
-        ActiveStatus status = ActiveStatus.ACTIVE;
-        if(filter.getStatus() != null){
-            status = ActiveStatus.getType(filter.getStatus().toUpperCase());
-        }
         return GenericSpecificationBuilder.<CentralOffice>builder()
-                .add(like("city", filter.getCity()))
-                .add(joinLike("head", "name", filter.getPlantHeadName()))
-                .add(equal("isActive", status))
+                .add(like(CITY, filter.getCity()))
+                .add(enumEqual(IS_ACTIVE, EnumHelper.toActiveStatus(filter.getStatus())))
                 .build();
     }
 
     // FACTORY
     public static Specification<Factory> forFactory(GenericFilterDto filter) {
         return GenericSpecificationBuilder.<Factory>builder()
-                .add(like("name", filter.getName()))
-                .add(like("city", filter.getCity()))
+                .add(like(CITY, filter.getCity()))
                 .add(joinLike("plantHead", "name", filter.getPlantHeadName()))
                 .add(joinEqual("centralOffice", "id", filter.getCentralOfficeId()))
-                .add(equal("isActive", filter.getStatus()))
-                .add(between("createdAt", filter.getStartDate(), filter.getEndDate()))
+                .add(enumEqual(IS_ACTIVE, EnumHelper.toActiveStatus(filter.getStatus())))
+                .add(between(CREATED_AT, filter.getStartDate(), filter.getEndDate()))
                 .build();
     }
 
     // PRODUCT
     public static Specification<Product> forProduct(GenericFilterDto filter) {
         return GenericSpecificationBuilder.<Product>builder()
-                .add(like("name", filter.getName()))
                 .add(joinEqual("category", "id", filter.getCategoryId()))
                 .add(greaterThanEqual("unitPrice", filter.getMinPrice()))
                 .add(lessThanEqual("unitPrice", filter.getMaxPrice()))
-                .add(equal("isActive", filter.getStatus()))
-                .add(between("createdAt", filter.getStartDate(), filter.getEndDate()))
+                .add(enumEqual(IS_ACTIVE, EnumHelper.toActiveStatus(filter.getStatus())))
+                .add(between(CREATED_AT, filter.getStartDate(), filter.getEndDate()))
                 .build();
     }
 
     // USER
     public static Specification<User> forUser(GenericFilterDto filter) {
         return GenericSpecificationBuilder.<User>builder()
-                .add(like("name", filter.getName()))
-                .add(like("email", filter.getEmail()))
-                .add(like("phone", filter.getPhone()))
                 .add(joinEqual("role", "id", filter.getRoleId()))
-                .add(equal("isActive", filter.getStatus()))
+                .add(enumEqual(IS_ACTIVE, EnumHelper.toActiveStatus(filter.getStatus())))
                 .add(joinEqualIf("userFactoryMappings", "factory.id", filter.getFactoryId()))
                 .add(joinEqualIf("userFactoryMappings", "bay.id", filter.getBayId()))
                 .build();
@@ -78,11 +71,10 @@ public class GenericFilterSpecFactory {
     // TOOL
     public static Specification<Tool> forTool(GenericFilterDto filter) {
         return GenericSpecificationBuilder.<Tool>builder()
-                .add(like("name", filter.getName()))
                 .add(joinEqual("category", "id", filter.getCategoryId()))
                 .add(enumEqual("isPerishable", EnumHelper.toPerishable(filter.getPerishable())))
                 .add(enumEqual("isExpensive", EnumHelper.toExpensive(filter.getExpensive())))
-                .add(between("createdAt", filter.getStartDate(), filter.getEndDate()))
+                .add(between(CREATED_AT, filter.getStartDate(), filter.getEndDate()))
                 .build();
     }
 

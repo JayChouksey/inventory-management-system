@@ -19,8 +19,6 @@ public class GenericFilterDto {
     private String stockStatus;
     private String perishable;
     private String expensive;
-    private String email;
-    private String phone;
     private String roleId;
     private String factoryId;
     private String bayId;

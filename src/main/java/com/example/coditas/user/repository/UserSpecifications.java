@@ -82,6 +82,7 @@ public class UserSpecifications {
             Predicate emailPredicate = cb.like(cb.lower(root.get("email")), likePattern);
             Predicate phonePredicate = cb.like(cb.lower(root.get("phone")), likePattern);
             Predicate userIdPredicate = cb.like(cb.lower(root.get("userId")), likePattern);
+//            Predicate rolePredicate = cb.like(cb.lower(root.get("userId")), likePattern);
 
             Predicate activePredicate = cb.equal(root.get("isActive"), ActiveStatus.ACTIVE);
 
@@ -100,7 +101,7 @@ public class UserSpecifications {
             query.distinct(true);
 
             return cb.and(
-                    cb.equal(mapping.get("factory").get("id"), factoryId),
+                    cb.equal(mapping.get("factory").get("factoryId"), factoryId),
                     root.get("role").get("name").in("CHIEF_SUPERVISOR", "WORKER"),
                     cb.equal(root.get("isActive"), ActiveStatus.ACTIVE)
             );
@@ -115,7 +116,7 @@ public class UserSpecifications {
             query.distinct(true);
 
             return cb.and(
-                    cb.equal(mapping.get("bay").get("id"), bayId),
+                    cb.equal(mapping.get("bay").get("bayId"), bayId),
                     cb.equal(root.get("role").get("name"), "WORKER"),
                     cb.equal(root.get("isActive"), ActiveStatus.ACTIVE)
             );

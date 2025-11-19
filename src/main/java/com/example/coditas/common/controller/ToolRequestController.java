@@ -1,6 +1,7 @@
 package com.example.coditas.common.controller;
 
 import com.example.coditas.common.dto.ApiResponseDto;
+import com.example.coditas.common.dto.PageableDto;
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.tool.dto.ToolIssuanceResponseDto;
 import com.example.coditas.tool.dto.ToolRequestCreateDto;
@@ -8,6 +9,7 @@ import com.example.coditas.tool.dto.ToolRequestResponseDto;
 import com.example.coditas.tool.service.ToolRequestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +30,6 @@ public class ToolRequestController {
         return new ResponseEntity<>(ApiResponseDto.ok(createdRequest, "Tool request created successfully."), HttpStatus.CREATED);
     }
 
-    // TODO: Merge below two in one
     @PostMapping("/{id}/approve")
     public ResponseEntity<ApiResponseDto<List<ToolIssuanceResponseDto>>> approveRequest(@PathVariable String id) {
         List<ToolIssuanceResponseDto> issuance = toolRequestService.approveAndIssueToolRequest(id);
@@ -43,5 +44,26 @@ public class ToolRequestController {
         }
         toolRequestService.rejectToolRequest(id, comment);
         return ResponseEntity.ok(ApiResponseDto.ok(null, "Request rejected successfully."));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponseDto<Page<ToolRequestResponseDto>>> getAllRequests(
+            @Valid PageableDto pageReq) {
+        Page<ToolRequestResponseDto> page = toolRequestService.getAllToolRequests(pageReq);
+        return ResponseEntity.ok(ApiResponseDto.ok(page, "Tool requests fetched"));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<ApiResponseDto<Page<ToolRequestResponseDto>>> getMyRequests(
+            @Valid PageableDto pageReq) {
+        Page<ToolRequestResponseDto> page = toolRequestService.getMyToolRequests(pageReq);
+        return ResponseEntity.ok(ApiResponseDto.ok(page, "My tool requests"));
+    }
+
+    @GetMapping("/{requestNumber}")
+    public ResponseEntity<ApiResponseDto<ToolRequestResponseDto>> getRequestByNumber(
+            @PathVariable String requestNumber) {
+        ToolRequestResponseDto result = toolRequestService.getToolRequestByNumber(requestNumber);
+        return ResponseEntity.ok(ApiResponseDto.ok(result, "Request details"));
     }
 }

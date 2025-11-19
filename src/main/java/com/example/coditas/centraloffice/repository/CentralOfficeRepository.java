@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface CentralOfficeRepository extends JpaRepository<CentralOffice, Long> {
+    Optional<CentralOffice> findByCentralOfficeIdAndIsActive(String userId, ActiveStatus status);
     Optional<CentralOffice> findByCentralOfficeId(String userId);
     long countByIsActive(ActiveStatus status);
     Optional<CentralOffice> findFirstByIsActiveAndCentralOfficeIdNot(ActiveStatus status, String excludeId);

@@ -65,7 +65,7 @@ public class CentralOfficeService {
     }
 
     public CentralOfficeResponseDto getOfficeDetail(String id) {
-        CentralOffice office = centralOfficeRepository.findByCentralOfficeId(id)
+        CentralOffice office = centralOfficeRepository.findByCentralOfficeIdAndIsActive(id, ActiveStatus.ACTIVE)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
         return toDto(office);
     }
@@ -91,7 +91,7 @@ public class CentralOfficeService {
 
     @Transactional
     public CentralOfficeResponseDto updateOffice(String id, CentralOfficeUpdateRequestDto dto) {
-        CentralOffice office = centralOfficeRepository.findByCentralOfficeId(id)
+        CentralOffice office = centralOfficeRepository.findByCentralOfficeIdAndIsActive(id, ActiveStatus.ACTIVE)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND));
 
         if (dto.getCity() != null && !dto.getCity().trim().isBlank()) {

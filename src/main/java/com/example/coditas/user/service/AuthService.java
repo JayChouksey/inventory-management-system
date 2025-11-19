@@ -8,6 +8,7 @@ import com.example.coditas.user.repository.UserRepository;
 import com.example.coditas.common.exception.CustomException;
 import com.example.coditas.common.util.JwtService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -52,13 +54,14 @@ public class AuthService {
                 throw new CustomException("Invalid email or password", HttpStatus.UNAUTHORIZED);
             }
 
-
             // Generate JWT
             String jwtToken = jwtService.generateToken(request.getEmail());
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser.getId());;
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser.getId());
+
+            log.info("User {} logged in successfully", savedUser.getName());
 
             // Build response DTO
-            LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+            return LoginResponseDto.builder()
                     .userId(savedUser.getId())
                     .email(savedUser.getEmail())
                     .name(savedUser.getName())
@@ -68,15 +71,14 @@ public class AuthService {
                     .accessToken(jwtToken)
                     .build();
 
-
-            return loginResponseDto;
-
         } catch (BadCredentialsException ex) {
             throw new CustomException("Invalid email or password", HttpStatus.UNAUTHORIZED);
         } catch (CustomException ex) {
             throw ex; // GlobalExceptionHandler will handle it
         } catch (Exception ex) {
-            throw new CustomException("Something went wrong during login", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException(
+                    "Something went wrong during login", HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -84,16 +86,22 @@ public class AuthService {
         String requestToken = refreshTokenRequestDto.getRefreshToken();
 
         RefreshToken refreshToken = refreshTokenRepository.findByToken(requestToken)
-                .orElseThrow(() -> new CustomException("Invalid Refresh Token", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new CustomException(
+                        "Invalid Refresh Token", HttpStatus.BAD_REQUEST
+                ));
 
         if(refreshTokenService.isTokenExpired(refreshToken)){
-            throw new CustomException("Refresh token expired. Please login again.", HttpStatus.BAD_REQUEST);
+            throw new CustomException(
+                    "Refresh token expired. Please login again.", HttpStatus.BAD_REQUEST
+            );
         }
 
         String newAccessToken = jwtService.generateToken(refreshToken.getUser().getEmail());
 
         RefreshTokenDto refreshTokenDto = new RefreshTokenDto();
         refreshTokenDto.setAccessToken(newAccessToken);
+
+        log.info("Refresh token generated successfully");
 
         return refreshTokenDto;
     }
@@ -105,6 +113,8 @@ public class AuthService {
                 .orElseThrow( () -> new CustomException("Invalid refresh token.", HttpStatus.BAD_REQUEST));
 
         refreshTokenRepository.delete(refreshToken);
+
+        log.info("User logged out successfully");
 
         return "Logged out successfully.";
     }

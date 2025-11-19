@@ -26,6 +26,7 @@ public enum UserRole {
             case "CHIEF_SUPERVISOR" -> CHIEF_SUPERVISOR;
             case "WORKER" -> WORKER;
             case "CENTRAL_OFFICE_HEAD" -> CENTRAL_OFFICE_HEAD;
+            case "DEALER" -> DEALER;
             case "CUSTOMER" -> CUSTOMER;
             default -> throw new CustomException("Please enter valid role.", HttpStatus.BAD_REQUEST);
         };

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
@@ -19,8 +20,8 @@ public class ToolRequestResponseDto {
     private String requestNumber;
     private String workerName;
     private String factoryId;
-    private ToolRequestStatus status;
+    private String status;
     private String comment;
-    private LocalDateTime createdAt;
+    private ZonedDateTime requestedOn;
     private List<ToolRequestItemDto> tools;
 }

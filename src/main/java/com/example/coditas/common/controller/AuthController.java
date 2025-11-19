@@ -23,7 +23,9 @@ public class AuthController {
 
         LoginResponseDto data = authService.loginUser(request);
 
-        ApiResponseDto<LoginResponseDto> responseBody = ApiResponseDto.ok(data, "User logged in successfully");
+        ApiResponseDto<LoginResponseDto> responseBody = ApiResponseDto.ok(
+                data, "User logged in successfully"
+        );
 
         return ResponseEntity.ok(responseBody);
     }
@@ -34,16 +36,20 @@ public class AuthController {
     ){
 
         DistributorSignUpResponseDto data = userService.createDistributor(dto);
-        ApiResponseDto<DistributorSignUpResponseDto> responseBody = ApiResponseDto.ok(data, "Success");
+        ApiResponseDto<DistributorSignUpResponseDto> responseBody = ApiResponseDto.ok(
+                data, "Success"
+        );
 
         return ResponseEntity.ok(responseBody);
     }
 
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<ApiResponseDto<RefreshTokenDto>> getRefreshToken(@RequestBody @Valid RefreshTokenRequestDto payload) {
         RefreshTokenDto data = authService.getRefreshToken(payload);
 
-        ApiResponseDto<RefreshTokenDto> responseBody = ApiResponseDto.ok(data, "New Access Token fetched successfully");
+        ApiResponseDto<RefreshTokenDto> responseBody = ApiResponseDto.ok(
+                data, "New Access Token fetched successfully"
+        );
 
         return ResponseEntity.ok(responseBody);
     }
@@ -52,8 +58,11 @@ public class AuthController {
     public ResponseEntity<ApiResponseDto<String>> logoutUser(@RequestBody @Valid RefreshTokenRequestDto payload) {
         String data = authService.logoutUser(payload);
 
-        ApiResponseDto<String> responseBody = ApiResponseDto.ok(data, "User logged out successfully");
+        ApiResponseDto<String> responseBody = ApiResponseDto.ok(
+                data, "User logged out successfully"
+        );
 
         return ResponseEntity.ok(responseBody);
     }
+
 }

@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
@@ -21,12 +21,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> create(
+    public ResponseEntity<ApiResponseDto<UserResponseDto>> create(
             @Valid @ModelAttribute UserCreateRequestDto dto
     ){
 
-        String data = userService.createUser(dto);
-        ApiResponseDto<String> responseBody = ApiResponseDto.ok(data, "Success");
+        UserResponseDto data = userService.createUser(dto);
+        ApiResponseDto<UserResponseDto> responseBody = ApiResponseDto.ok(data, "Success");
 
         return ResponseEntity.ok(responseBody);
     }
@@ -53,12 +53,12 @@ public class UserController {
     }
 
     // Owner – Full employee list (filter + search + page + sort)
-    @GetMapping("/employees")
+    @GetMapping
     public ResponseEntity<ApiResponseDto<Page<UserResponseDto>>> getEmployees(
             @ModelAttribute UserFilterDto filter, @RequestParam(value = "q", required = false) String query,
             @ModelAttribute PageableDto page) {
 
-        Page<UserResponseDto> data = userService.searchEmployees(filter, query, page);
+        Page<UserResponseDto> data = userService.searchUsers(filter, query, page);
         return ResponseEntity.ok(ApiResponseDto.paged(
                 data, page.getPage(), page.getSize(), data.getTotalElements()
         ));

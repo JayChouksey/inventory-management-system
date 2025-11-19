@@ -1,5 +1,6 @@
 package com.example.coditas.user.service;
 
+import com.example.coditas.common.util.TempPasswordGenerator;
 import com.example.coditas.user.dto.*;
 import com.example.coditas.user.entity.Role;
 import com.example.coditas.user.entity.User;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private static final String DEFAULT_PROFILE_PIC = "https://res.cloudinary.com/dltuu1hhs/image/upload/v1761553393/cld-sample.jpg";
+    private static final String USER_NOT_FOUND_MSG = "Requester user not found";
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -90,7 +92,6 @@ public class UserService {
                 .isActive(ActiveStatus.ACTIVE)
                 .build();
 
-        // Save with flush to catch DB constraints early
         distributor = userRepository.save(distributor);
 
         log.info("Distributor created successfully: {} ({})", distributor.getName(), distributor.getUserId());
@@ -104,7 +105,17 @@ public class UserService {
     }
 
     @Transactional
-    public String createUser(UserCreateRequestDto dto){
+    public UserResponseDto createUser(UserCreateRequestDto dto){
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User createdBy = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND_MSG, HttpStatus.NOT_FOUND));
+
+        if (createdBy.getRole().getName().equals(UserRole.PLANT_HEAD) && !dto.getRole().equalsIgnoreCase("WORKER") &&
+                    !dto.getRole().equalsIgnoreCase("CHIEF_SUPERVISOR")) {
+                throw new CustomException("Plant Head can only add Workers and Chief Supervisors", HttpStatus.BAD_REQUEST);
+            }
+
+
         // Business validation
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new CustomException("Email already exists: " + dto.getEmail(), HttpStatus.CONFLICT);
@@ -114,7 +125,7 @@ public class UserService {
             throw new CustomException("Phone number already registered: " + dto.getPhone(), HttpStatus.CONFLICT);
         }
 
-        Role userRole = roleRepository.findByName(UserRole.getRole(dto.getRole()))
+        Role userRole = roleRepository.findByName(UserRole.getRole(dto.getRole().toUpperCase()))
                 .orElseThrow(() -> new CustomException("Role not found in database", HttpStatus.NOT_FOUND));
 
         // Handle image upload
@@ -125,19 +136,14 @@ public class UserService {
 
         // Generate unique userId
         String userId = generateUniqueUserId();
-//        String password = generatePassword();
-
-        // Create the object to add the Create By
-        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User createdBy = userRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new CustomException("Requester user not found", HttpStatus.NOT_FOUND));
+        String password = TempPasswordGenerator.generatePassword(dto.getName(), dto.getPhone());
 
         // Build User entity
         User newUser = User.builder()
                 .userId(userId)
                 .name(dto.getName().trim())
                 .email(dto.getEmail().trim().toLowerCase())
-                .password(passwordEncoder.encode("12345678")) // TODO: Add Password generation logic
+                .password(passwordEncoder.encode(password))
                 .phone(dto.getPhone())
                 .imageUrl(imageUrl)
                 .role(userRole)
@@ -146,31 +152,30 @@ public class UserService {
                 .build();
 
         // Save with flush to catch DB constraints early
-        newUser = userRepository.saveAndFlush(newUser);
+        User savedUser = userRepository.save(newUser);
 
         entityManager.refresh(newUser); // Ensure fresh state
         log.info("User created successfully: {} ({})", newUser.getName(), newUser.getUserId());
 
-        return "User Created Successfully!"; // TODO: Change it to user object dto
+        return toDto(savedUser);
     }
 
     @Transactional
     public UserResponseDto updateUser(String userId, UserUpdateRequestDto dto) {
 
         // Find user (must be ACTIVE)
-        User user = userRepository.findActiveByUserId(userId)
+        User user = userRepository.findByUserIdAndIsActive(userId, ActiveStatus.ACTIVE)
                 .orElseThrow(() -> new CustomException("User not found or inactive", HttpStatus.NOT_FOUND));
 
 
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userRepository.findByEmail("admin@company.com") // TODO: Change it when implement JWT Token
-                .orElseThrow(() -> new CustomException("Requester user not found", HttpStatus.NOT_FOUND));
+        User currentUser = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND_MSG, HttpStatus.NOT_FOUND));
         boolean isSelf = currentUser.getUserId().equals(userId);
 
-        // TODO: Uncomment it when implement JWT Token
-        /*if (!isSelf) {
+        if (!isSelf) {
             throw new CustomException("You can only update your own profile", HttpStatus.FORBIDDEN);
-        }*/
+        }
 
         // Update name
         if (dto.getName() != null && !dto.getName().trim().isBlank()) {
@@ -224,10 +229,13 @@ public class UserService {
         // Prevent self-delete
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new CustomException("Requester user not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND_MSG, HttpStatus.NOT_FOUND));
         if (currentUser != null && currentUser.getUserId().equals(userId)) {
             throw new CustomException("You cannot delete yourself!", HttpStatus.FORBIDDEN);
         }
+
+
+        // TODO
 
         // Prevent deleting admins
         if (user.getRole().getName().equals(UserRole.ADMIN)) {
@@ -251,7 +259,7 @@ public class UserService {
     }
 
     // Search with filters + pagination + sorting
-    public Page<UserResponseDto> searchEmployees(UserFilterDto filter, String query,  PageableDto pageReq) {
+    public Page<UserResponseDto> searchUsers(UserFilterDto filter, String query,  PageableDto pageReq) {
         Specification<User> spec = UserSpecifications.withFilters(
                 filter.getName(),
                 filter.getEmail(),
@@ -386,6 +394,7 @@ public class UserService {
 
     // HELPER METHODS
 
+    // TODO: Change it so no repo call will be there
     // Generate sequential userId
     private String generateUniqueUserId() {
         long count = userRepository.count();

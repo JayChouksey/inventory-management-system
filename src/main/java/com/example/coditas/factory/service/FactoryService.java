@@ -2,6 +2,7 @@ package com.example.coditas.factory.service;
 
 import com.example.coditas.common.dto.GenericFilterDto;
 import com.example.coditas.common.specification.GenericFilterSpecFactory;
+import com.example.coditas.common.util.TempPasswordGenerator;
 import com.example.coditas.user.entity.Role;
 import com.example.coditas.user.entity.User;
 import com.example.coditas.user.repository.RoleRepository;
@@ -47,8 +48,11 @@ public class FactoryService {
     public FactoryResponseDto createFactory(FactoryCreateRequestDto dto) {
 
         // Validate Central Office
-        CentralOffice centralOffice = centralOfficeRepository.findByCentralOfficeId(dto.getCentralOfficeId())
-                .orElseThrow(() -> new CustomException("Central office not found", HttpStatus.NOT_FOUND));
+        CentralOffice centralOffice = centralOfficeRepository.findByCentralOfficeIdAndIsActive(
+                dto.getCentralOfficeId(), ActiveStatus.ACTIVE)
+                .orElseThrow(() -> new CustomException(
+                        "Central office not found", HttpStatus.NOT_FOUND
+                ));
 
         // Generate factoryId
         String factoryId = generateUniqueFactoryId();
@@ -76,7 +80,9 @@ public class FactoryService {
     @Transactional
     public FactoryResponseDto updateFactory(String id, FactoryUpdateRequestDto dto) {
         Factory factory = factoryRepository.findActiveByFactoryId(id)
-                .orElseThrow(() -> new CustomException("Factory not found or inactive", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(
+                        "Factory not found or inactive", HttpStatus.NOT_FOUND
+                ));
 
         if (dto.getName() != null && !dto.getName().trim().isBlank()) {
             factory.setName(dto.getName().trim());
@@ -88,12 +94,15 @@ public class FactoryService {
             factory.setAddress(dto.getAddress());
         }
         if (dto.getCentralOfficeId() != null) {
-            CentralOffice co = centralOfficeRepository.findByCentralOfficeId(dto.getCentralOfficeId())
-                    .orElseThrow(() -> new CustomException("Central office not found", HttpStatus.NOT_FOUND));
+            CentralOffice co = centralOfficeRepository.findByCentralOfficeIdAndIsActive(
+                    dto.getCentralOfficeId(), ActiveStatus.ACTIVE)
+                    .orElseThrow(() -> new CustomException(
+                            "Central office not found", HttpStatus.NOT_FOUND
+                    ));
             factory.setCentralOffice(co);
         }
         if (dto.getPlantHeadId() != null) {
-            User newHead = userRepository.findActiveByUserId(dto.getPlantHeadId())
+            User newHead = userRepository.findByUserIdAndIsActive(dto.getPlantHeadId(), ActiveStatus.ACTIVE)
                     .orElseThrow(() -> new CustomException("Plant head not found or inactive", HttpStatus.NOT_FOUND));
             if (!newHead.getRole().getName().equals(UserRole.PLANT_HEAD)) {
                 throw new CustomException("Selected user is not a Plant Head", HttpStatus.BAD_REQUEST);
@@ -124,7 +133,7 @@ public class FactoryService {
     }
 
     public Page<FactoryResponseDto> searchFactories(GenericFilterDto filter, PageableDto pageReq) {
-        // Filter: name, city, plantHeadName, centralOfficeId, status, startDate, endDate
+        // Filter: city, plantHeadName, centralOfficeId, status, startDate, endDate
         Specification<Factory> spec = GenericFilterSpecFactory.forFactory(filter);
         Pageable pageable = toPageable(pageReq);
         Page<Factory> page = factoryRepository.findAll(spec, pageable);
@@ -153,8 +162,11 @@ public class FactoryService {
 
     private User resolveOrCreatePlantHead(FactoryCreateRequestDto dto) {
         if (dto.getPlantHeadId() != null) {
-            return userRepository.findActiveByUserId(dto.getPlantHeadId())
-                    .orElseThrow(() -> new CustomException("Plant head not found", HttpStatus.NOT_FOUND));
+            return userRepository.findByUserIdAndRoleNameAndIsActive(dto.getPlantHeadId(),
+                            UserRole.PLANT_HEAD, ActiveStatus.ACTIVE)
+                    .orElseThrow(() -> new CustomException(
+                            "Plant head not found", HttpStatus.NOT_FOUND
+                    ));
         }
 
         if (dto.getNewPlantHeadEmail() == null || dto.getNewPlantHeadEmail().isBlank()) {
@@ -168,7 +180,9 @@ public class FactoryService {
         Role plantHeadRole = roleRepository.findByName(UserRole.PLANT_HEAD)
                 .orElseThrow(() -> new CustomException("Plant Head role not found", HttpStatus.NOT_FOUND));
 
-        String tempPassword = "12345678"; // TODO: generate random
+        String tempPassword = TempPasswordGenerator.generatePassword(dto.getNewPlantHeadName(),
+                dto.getNewPlantHeadPhone());
+
         String userId = generateUniqueUserId();
 
         User newUser = User.builder()
@@ -181,7 +195,6 @@ public class FactoryService {
                 .isActive(ActiveStatus.ACTIVE)
                 .build();
 
-        // TODO: Change it
         newUser = userRepository.save(newUser);
 
         // TODO: Send email with credentials

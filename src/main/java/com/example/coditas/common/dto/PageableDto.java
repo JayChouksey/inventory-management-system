@@ -10,6 +10,6 @@ import lombok.Setter;
 public class PageableDto {
     private int page = 0;
     private int size = 10;
-    private String sortBy = "created_at";
+    private String sortBy = "createdAt";
     private String sortDir = "desc";
 }

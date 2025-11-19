@@ -171,8 +171,7 @@ public class OrderService {
                 .build();
 
         // TODO
-        DealerInvoice savedInvoice = dealerInvoiceRepository.saveAndFlush(invoice);
-        entityManager.refresh(savedInvoice);
+        DealerInvoice savedInvoice = dealerInvoiceRepository.save(invoice);
 
 
         log.info("Order FULFILLED: {} from factory {}", orderId, factory.getName());
